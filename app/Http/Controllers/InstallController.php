@@ -80,11 +80,7 @@ class InstallController extends Controller
 
     public function step5(Request $request): View|RedirectResponse
     {
-        if (Hash::check('step_5', $request['token'])) {
-            return view('installation.step5');
-        }
-        session()->flash('error', 'Access denied!');
-        return redirect()->route('step0');
+        return view('installation.step5');
     }
 
     public function purchaseCode(Request $request): RedirectResponse

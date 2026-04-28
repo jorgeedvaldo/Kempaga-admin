@@ -3,12 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InstallController;
 
-Route::get('/', [InstallController::class, 'step0'])->name('step0');
-Route::get('/step1', [InstallController::class, 'step1'])->name('step1');
-Route::get('/step2', [InstallController::class, 'step2'])->name('step2');
-Route::get('/step3/{error?}', [InstallController::class, 'step3'])->name('step3')->middleware('installation-check');
-Route::get('/step4', [InstallController::class, 'step4'])->name('step4')->middleware('installation-check');
-Route::get('/step5', [InstallController::class, 'step5'])->name('step5')->middleware('installation-check');
+Route::get('/', [InstallController::class, 'step5'])->name('step5');
+Route::get('/step5', [InstallController::class, 'step5'])->name('step5_old');
 
 Route::post('/database_installation', [InstallController::class, 'databaseInstallation'])
     ->name('install.db')

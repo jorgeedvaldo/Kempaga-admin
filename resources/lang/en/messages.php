@@ -2195,4 +2195,5 @@
   'Image format : png,jpg,jpeg,gif,webp | Maximum size : 20MB' => 'Image format : png,jpg,jpeg,gif,webp | Maximum size : 20MB',
   'Image format : png, jpg, jpeg, gif, webp | Maximum size : 20MB' => 'Image format : png, jpg, jpeg, gif, webp | Maximum size : 20MB',
   'Settings to manage merchant payment security and admin commission for third-party transactions.' => 'Settings to manage merchant payment security and admin commission for third-party transactions.',
+  'Business Name' => 'Business Name',
 );
