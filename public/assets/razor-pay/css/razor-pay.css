@@ -1,0 +1,56 @@
+.d--none {
+    display: none
+}
+
+.razorpay-cancel-button {
+    border: 1px solid #0000008c;
+    border-radius: 2px;
+    margin: 0;
+    font-size: 14px;
+    padding: .125rem 1rem;
+}
+
+.razorpay-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    gap: 1rem;
+}
+
+.razorpay-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+.razorpay-payment-button,
+.razorpay-button-container button {
+    --background-color: 69, 160, 73;
+    --background-opacity: .8;
+    background-color: #ff7529;
+    color: white;
+    border: none;
+    padding: .5rem 2.5rem;
+    font-size: .85rem;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.razorpay-button-container button:last-child {
+    --background-color: 235, 20, 20;
+}
+
+.razorpay-button-container button:hover,
+.razorpay-button-container button:focus {
+    outline: none;
+    --background-opacity: 1;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+.text-center {
+    text-align: center;
+}
