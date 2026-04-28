@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class BusinessSetting extends Model
 {
+    protected $fillable = ['key', 'value'];
+
     protected $casts = [
         'key' => 'string',
         'created_at' => 'datetime',
