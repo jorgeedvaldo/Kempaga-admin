@@ -9,15 +9,8 @@ class DeviceVerifyMiddleware
 {
     public function handle(Request $request, Closure $next): mixed
     {
-        $device = $request->header('User-Agent');
-        //$device = 'Dart/2.17 (dart:io)';
-        $device = explode("/", $device);
-
-        if(env('APP_MODE') == LIVE && $device[0] != 'Dart') {
-            $errors = [];
-            array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
-            abort(response()->json(['errors' => $errors], 401));
-        }
+        // A restrição que exigia 'Dart' no User-Agent foi removida
+        // para permitir requisições do novo app feito em React Native.
 
         return $next($request);
     }
