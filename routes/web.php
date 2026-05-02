@@ -33,16 +33,29 @@ use App\Http\Controllers\Web\RegistrationController;
 |
 */
 
-// No Kempaga-admin/routes/web.php
 Route::get('/fix-server', function () {
-    // Cria o link do storage
-    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    try {
+        // 1. Tenta limpar o cache de configuração primeiro
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
 
-    // Gera as chaves do Passport (corrige o erro 500)
-    \Illuminate\Support\Facades\Artisan::call('passport:keys', ['--force' => true]);
+        // 2. Verifica se o comando de instalação existe
+        $commands = \Illuminate\Support\Facades\Artisan::all();
+        if (!isset($commands['passport:install'])) {
+            return "ERRO: O Laravel não encontrou o pacote Passport no servidor. <br> 
+                     Certifique-se de que você enviou a pasta 'vendor' completa para o servidor.";
+        }
 
-    return "Storage link criado e Chaves do Passport geradas!";
+        // 3. Tenta o comando de instalação completo (ele já gera as chaves)
+        \Illuminate\Support\Facades\Artisan::call('storage:link');
+        \Illuminate\Support\Facades\Artisan::call('passport:install', ['--force' => true]);
+
+        return "SUCESSO: Storage link e Passport configurados!";
+    } catch (\Exception $e) {
+        return "ERRO AO EXECUTAR: " . $e->getMessage();
+    }
 });
+
 
 
 Route::get('/', [LandingPageController::class, 'landingPageHome'])->name('landing-page-home');
