@@ -33,6 +33,17 @@ use App\Http\Controllers\Web\RegistrationController;
 |
 */
 
+// No Kempaga-admin/routes/web.php
+Route::get('/fix-server', function () {
+    // Cria o link do storage
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+
+    // Gera as chaves do Passport (corrige o erro 500)
+    \Illuminate\Support\Facades\Artisan::call('passport:keys', ['--force' => true]);
+
+    return "Storage link criado e Chaves do Passport geradas!";
+});
+
 
 Route::get('/', [LandingPageController::class, 'landingPageHome'])->name('landing-page-home');
 Route::post('newsletter/subscribe', [NewsLetterController::class, 'newsLetterSubscribe'])->name('newsletter.subscribe');
@@ -53,7 +64,7 @@ Route::group(['prefix' => 'agent', 'as' => 'agent.'], function () {
 });
 
 
-Route::get('/home', function() {
+Route::get('/home', function () {
     return redirect(\route('admin.auth.login'));
 });
 
@@ -102,9 +113,11 @@ if (!addon_published_status('Gateways')) {
         Route::group(['prefix' => 'paypal', 'as' => 'paypal.'], function () {
             Route::get('pay', [PaypalPaymentController::class, 'payment']);
             Route::any('success', [PaypalPaymentController::class, 'success'])->name('success')
-                ->withoutMiddleware([VerifyCsrfToken::class]);;
+                ->withoutMiddleware([VerifyCsrfToken::class]);
+            ;
             Route::any('cancel', [PaypalPaymentController::class, 'cancel'])->name('cancel')
-                ->withoutMiddleware([VerifyCsrfToken::class]);;
+                ->withoutMiddleware([VerifyCsrfToken::class]);
+            ;
         });
 
         //SENANG-PAY
