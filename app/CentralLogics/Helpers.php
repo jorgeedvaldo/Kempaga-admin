@@ -112,32 +112,64 @@ class Helpers
 
     public static function send_push_notif_to_topic(array $data): bool
     {
-        $image = dynamicStorage(path: 'storage/app/public/notification') . '/' . $data['image'];
-        $postData = [
-            'message' => [
-                "topic" => $data['receiver'],
-                "data" => [
-                    "title" => (string)$data['title'],
-                    "body" => (string)$data['description'],
-                    "image" => (string)$image,
-                    "type" => (string)$data['type']
-                ],
-                "notification" => [
-                    "title" => (string)$data['title'],
-                    "body" => (string)$data['description'],
-                    "image" => (string)$image,
-                ],
-                "apns" => [
-                    "payload" => [
-                        "aps" => [
-                            "sound" => "notification.wav"
-                        ]
-                    ]
-                ],
-            ]
-        ];
+        $receiver = $data['receiver'] ?? 'all';
+        
+        $query = \App\Models\User::whereNotNull('fcm_token')
+            ->where('fcm_token', 'like', 'ExponentPushToken%');
 
-        return self::sendNotificationToHttp($postData);
+        if ($receiver == 'customers') {
+            $query->where('type', 2);
+        } elseif ($receiver == 'agents') {
+            $query->where('type', 1);
+        }
+
+        $tokens = $query->pluck('fcm_token')->toArray();
+
+        if (empty($tokens)) {
+            return false;
+        }
+
+        $url = 'https://exp.host/--/api/v2/push/send';
+        $image = dynamicStorage(path: 'storage/app/public/notification') . '/' . $data['image'];
+
+        $chunks = array_chunk($tokens, 100);
+        $success = true;
+
+        foreach ($chunks as $chunk) {
+            $postData = [
+                "to" => $chunk,
+                "title" => (string)$data['title'],
+                "body" => (string)$data['description'],
+                "data" => [
+                    "type" => (string)$data['type'],
+                    "image" => (string)$image,
+                ],
+                "sound" => "default",
+                "priority" => "high",
+                "badge" => 1
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Accept: application/json',
+                'Content-Type: application/json',
+            ]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+            
+            curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode !== 200) {
+                $success = false;
+            }
+        }
+
+        return $success;
     }
 
     public static function order_status_update_message(string $status): string
