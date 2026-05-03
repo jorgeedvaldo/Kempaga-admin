@@ -67,32 +67,47 @@ class Helpers
         return $response->json('access_token');
     }
 
-    public static function send_push_notif_to_device(?string $fcm_token, array $data): bool
+    public static function send_push_notif_to_device(?string $expo_push_token, array $data): bool
     {
+        // 1. Validação básica do token
+        if (empty($expo_push_token)) {
+            return false;
+        }
+        // 2. Verificar se o token é do formato Expo (capturado pela App React Native)
+        if (!str_contains($expo_push_token, 'ExponentPushToken')) {
+            return false;
+        }
+        $url = 'https://exp.host/--/api/v2/push/send';
+        // 3. Montar o payload para a Expo Push API
         $postData = [
-            'message' => [
-                "token" => $fcm_token,
-                "data" => [
-                    "title" => (string)$data['title'],
-                    "body" => (string)$data['description'],
-                    "image" => (string)$data['image'],
-                    "type" => (string)$data['type']
-                ],
-                "notification" => [
-                    'title' => (string)$data['title'],
-                    'body' => (string)$data['description'],
-                ],
-                "apns" => [
-                    "payload" => [
-                        "aps" => [
-                            "sound" => "notification.wav"
-                        ]
-                    ]
-                ],
-            ]
+            "to" => $expo_push_token,
+            "title" => (string)$data['title'],
+            "body" => (string)$data['description'],
+            "data" => [
+                "type" => (string)$data['type'],
+                "image" => (string)($data['image'] ?? ''),
+            ],
+            "sound" => "default",
+            "priority" => "high",
+            "badge" => 1
         ];
-
-        return self::sendNotificationToHttp($postData);
+        // 4. Enviar via cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'Accept-encoding: gzip, deflate',
+            'Content-Type: application/json',
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        // Retorna verdadeiro se o Expo aceitou o pedido (HTTP 200)
+        return $httpCode === 200;
     }
 
     public static function send_push_notif_to_topic(array $data): bool
