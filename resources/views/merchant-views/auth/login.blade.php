@@ -152,7 +152,8 @@
                                 </div>
 
                                 <div class="js-form-message form-group">
-                                    <input type="text" class="form-control __form-control __form-control-input {{ $errors->has('phone') ? 'border-danger' : '' }}"
+                                    <input type="text"
+                                        class="form-control __form-control __form-control-input {{ $errors->has('phone') ? 'border-danger' : '' }}"
                                         name="phone" id="phone" required tabindex="1"
                                         placeholder="{{translate('Enter your phone no.')}}"
                                         data-msg="{{translate('Please enter a valid phone number.')}}"
@@ -164,7 +165,8 @@
 
                                 <div class="js-form-message form-group">
                                     <div class="input-group input-group-merge">
-                                        <input type="password" class="js-toggle-password form-control __form-control {{ $errors->has('password') ? 'border-danger' : '' }}"
+                                        <input type="password"
+                                            class="js-toggle-password form-control __form-control {{ $errors->has('password') ? 'border-danger' : '' }}"
                                             name="password" id="signupSrPassword"
                                             placeholder="{{translate('Enter your password')}}"
                                             aria-label="8+ characters required" required
@@ -192,7 +194,8 @@
                                 @else
                                     <div class="row p-2">
                                         <div class="col-6 pr-0">
-                                            <input type="text" class="form-control form-control-lg {{ $errors->has('default_captcha_value') ? 'border-danger' : 'border-none' }}"
+                                            <input type="text"
+                                                class="form-control form-control-lg {{ $errors->has('default_captcha_value') ? 'border-danger' : 'border-none' }}"
                                                 name="default_captcha_value" value=""
                                                 placeholder="{{translate('Enter captcha')}}" autocomplete="off">
                                         </div>
@@ -207,7 +210,8 @@
                                         </div>
                                     </div>
                                     @error('default_captcha_value')
-                                        <div class="text-danger mt-1 small font-weight-bold" style="padding-left: 8px;">{{ $message }}</div>
+                                        <div class="text-danger mt-1 small font-weight-bold" style="padding-left: 8px;">
+                                            {{ $message }}</div>
                                     @enderror
                                 @endif
 
