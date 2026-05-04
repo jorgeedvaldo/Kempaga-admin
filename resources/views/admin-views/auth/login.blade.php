@@ -105,7 +105,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         <input type="text" class="w-full px-3 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-slate-900" name="default_captcha_value" placeholder="{{translate('Enter captcha')}}" autocomplete="off">
                         <a class="refresh-recaptcha cursor-pointer" title="{{translate('Click to refresh')}}">
-                            <img src="{{ URL('/admin/auth/code/captcha/1') }}" class="h-[52px] w-full rounded-xl border border-gray-200 object-cover" id="default_recaptcha_id" alt="{{ translate('recaptcha') }}">
+                            <img src="{{ URL('/admin/auth/code/captcha/1') }}" class="h-[52px] w-full rounded-xl border border-gray-200 object-contain hover:scale-100 transition-none" id="default_recaptcha_id" alt="{{ translate('recaptcha') }}" style="transform: none !important;">
                         </a>
                     </div>
                 </div>
@@ -122,7 +122,15 @@
                     </div>
                 @endif
 
-                <button type="submit" class="w-full py-4 bg-brandPurple hover:bg-brandPurpleHover text-white text-lg font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-brandPurple/20" id="signInBtn">{{translate('Entrar')}}</button>
+                <button type="submit" class="w-full py-4 bg-brandPurple hover:bg-brandPurpleHover text-white text-lg font-semibold rounded-xl transition-all duration-300 shadow-lg shadow-brandPurple/20 flex items-center justify-center gap-3" id="signInBtn">
+                    <span class="btn-text">{{translate('Entrar')}}</span>
+                    <div class="loading-spinner hidden">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </div>
+                </button>
             </form>
         </div>
     </div>
@@ -178,7 +186,20 @@
     });
 
     $('#signInBtn').on('click', function (e) {
-        if ($('#set_default_captcha_value').val() == '1') return true;
+        const $btn = $(this);
+        const $text = $btn.find('.btn-text');
+        const $spinner = $btn.find('.loading-spinner');
+
+        function showLoading() {
+            $btn.addClass('opacity-80 pointer-events-none cursor-not-allowed');
+            $text.addClass('hidden');
+            $spinner.removeClass('hidden');
+        }
+
+        if ($('#set_default_captcha_value').val() == '1') {
+            showLoading();
+            return true;
+        }
         e.preventDefault();
         if (typeof grecaptcha === 'undefined') {
             toastr.error('Invalid recaptcha key provided. Please check the recaptcha configuration.');
@@ -186,6 +207,7 @@
             $('#set_default_captcha_value').val('1');
             return;
         }
+        showLoading();
         grecaptcha.ready(function () {
             grecaptcha.execute('{{$recaptcha['site_key'] ?? ''}}', {action: 'submit'}).then(function (token) {
                 $('#g-recaptcha-response').val(token);

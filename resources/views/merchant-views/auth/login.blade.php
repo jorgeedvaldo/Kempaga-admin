@@ -30,6 +30,26 @@
             background-image: url("{{ dynamicAsset(path: 'public/assets/admin/svg/components/login_background.svg') }}");
             opacity: 0.5;
         }
+        .spinner-border {
+            display: inline-block;
+            width: 1.2rem;
+            height: 1.2rem;
+            vertical-align: text-bottom;
+            border: .15em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            -webkit-animation: spinner-border .75s linear infinite;
+            animation: spinner-border .75s linear infinite;
+            margin-left: 8px;
+        }
+        @keyframes spinner-border {
+            to { transform: rotate(360deg); }
+        }
+        #default_recaptcha_id {
+            transform: none !important;
+            transition: none !important;
+            object-fit: contain !important;
+        }
     </style>
 </head>
 
@@ -130,8 +150,10 @@
                             @endif
 
                             <div class="d-flex justify-content-center mt-5">
-                                <button type="submit"
-                                        class="btn btn-primary sign-in-button" id="signInBtn">{{translate('sign_in')}}</button>
+                                <button type="submit" class="btn btn-primary sign-in-button" id="signInBtn">
+                                    <span class="btn-text">{{translate('sign_in')}}</span>
+                                    <span class="spinner-border d-none" id="btn-spinner" role="status" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -181,25 +203,6 @@
 </script>
 
 @if(isset($recaptcha) && $recaptcha['status'] == 1)
-{{--    <script type="text/javascript">--}}
-{{--        var onloadCallback = function () {--}}
-{{--            grecaptcha.render('recaptcha_element', {--}}
-{{--                'sitekey': '{{ \App\CentralLogics\Helpers::get_business_settings('recaptcha')['site_key'] }}'--}}
-{{--            });--}}
-{{--        };--}}
-{{--    </script>--}}
-{{--    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>--}}
-{{--    <script>--}}
-{{--        $("#form-id").on('submit', function (e) {--}}
-{{--            var response = grecaptcha.getResponse();--}}
-
-{{--            if (response.length === 0) {--}}
-{{--                e.preventDefault();--}}
-{{--                toastr.error("{{translate('Please check the recaptcha')}}");--}}
-{{--            }--}}
-{{--        });--}}
-{{--    </script>--}}
-
     <script src="https://www.google.com/recaptcha/api.js?render={{$recaptcha['site_key']}}"></script>
     <script>
         $(document).ready(function() {
@@ -211,6 +214,10 @@
                     return;
                 }
 
+                $('#signInBtn').addClass('disabled').attr('disabled', true);
+                $('#btn-spinner').removeClass('d-none');
+                $('.btn-text').addClass('d-none');
+
                 grecaptcha.ready(function () {
                     grecaptcha.execute('{{$recaptcha['site_key']}}', {action: 'submit'}).then(function (token) {
                         $('#g-recaptcha-response').value = token;
@@ -219,6 +226,9 @@
                 });
 
                 window.onerror = function(message) {
+                    $('#signInBtn').removeClass('disabled').removeAttr('disabled');
+                    $('#btn-spinner').addClass('d-none');
+                    $('.btn-text').removeClass('d-none');
                     var errorMessage = 'An unexpected error occurred. Please check the recaptcha configuration';
                     if (message.includes('Invalid site key')) {
                         errorMessage = 'Invalid site key provided. Please check the recaptcha configuration.';
@@ -233,6 +243,14 @@
     </script>
 @else
     <script type="text/javascript">
+        $(document).ready(function() {
+            $('#signInBtn').click(function () {
+                $(this).addClass('disabled').attr('disabled', true);
+                $('#btn-spinner').removeClass('d-none');
+                $('.btn-text').addClass('d-none');
+                $('#form-id').submit();
+            });
+        });
         $('.refresh-recaptcha').on('click', function() {
             var $url = "{{ URL('/admin/auth/code/captcha') }}";
             var $url = $url + "/" + Math.random();
