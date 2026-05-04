@@ -44,7 +44,7 @@
 
         <!-- Copyright -->
         <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-textMutedLight dark:text-textMutedDark">
-            <p>&copy; {{ date('Y') }} {{ \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()->value }}. {{translate('Todos os direitos reservados.')}}</p>
+            <p>&copy; {{ date('Y') }} Kempaga. {{translate('Todos os direitos reservados.')}}</p>
             <div class="flex gap-4 mt-4 md:mt-0">
                 <span class="flex items-center gap-2">
                     <div class="w-2 h-2 rounded-full bg-brandGreenBright"></div>

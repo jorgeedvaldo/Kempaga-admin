@@ -21,9 +21,8 @@
                 <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
             </button>
 
-            <a href="{{route('admin.auth.login')}}" class="hidden sm:block text-slate-700 dark:text-white font-semibold hover:text-brandBlue transition-colors px-2">{{translate('Entrar')}}</a>
             <a href="{{route('agent.agent-self-registration')}}" class="bg-brandBlue hover:bg-brandBlueHover text-white text-[1.05rem] font-semibold py-2.5 px-6 rounded-full transition-all duration-300 shadow-[0_0_15px_rgba(0,102,204,0.3)]">
-                {{translate('Criar Conta')}}
+                {{translate('Quero Ser Agente')}}
             </a>
         </div>
     </nav>

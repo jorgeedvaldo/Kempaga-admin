@@ -1,6 +1,6 @@
 @extends('layouts.landing.app')
 
-@section('title', Helpers::get_business_settings('business_name') . ' | ' . translate('A sua carteira digital em Angola'))
+@section('title', 'Kempaga | ' . translate('A sua carteira digital em Angola'))
 
 @section('content')
     <!-- ==================== HERO SECTION ==================== -->
@@ -25,7 +25,7 @@
 
             <div class="flex flex-wrap items-center gap-4 mt-8">
                 <a href="{{route('agent.agent-self-registration')}}" class="bg-gradient-to-r from-brandBlue to-brandBlueHover text-white font-semibold py-4 px-8 rounded-full transition-all duration-300 text-lg shadow-lg shadow-brandBlue/25 hover:scale-105">
-                    {{translate('Começar Agora')}}
+                    {{translate('Quero Ser Agente')}}
                 </a>
                 <a href="{{route('pages.about-us')}}" class="bg-transparent border-2 border-slate-300 text-slate-700 hover:border-brandGreen hover:bg-brandGreen hover:text-white dark:border-gray-700 dark:text-white dark:hover:border-brandGreen dark:hover:bg-brandGreen font-semibold py-4 px-8 rounded-full transition-all duration-300 text-lg">
                     {{translate('Saiba Mais')}}
@@ -167,19 +167,19 @@
         </div>
     </section>
 
-    <!-- ==================== CTA BANNER ==================== -->
+    <!-- ==================== CTA BANNER (AGENT RECRUITMENT) ==================== -->
     <section class="max-w-[1200px] mx-auto px-6 lg:px-12 py-16">
         <div class="w-full bg-gradient-to-br from-brandBlue to-brandGreen rounded-3xl p-10 lg:p-16 text-center shadow-2xl shadow-brandBlue/20 relative overflow-hidden">
             <!-- Padrão decorativo -->
             <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
             
             <div class="relative z-10">
-                <h2 class="text-3xl lg:text-5xl font-bold text-white mb-6">{{translate('Pronto para simplificar a sua vida?')}}</h2>
+                <h2 class="text-3xl lg:text-5xl font-bold text-white mb-6">{{translate('Seja um Agente Kempaga')}}</h2>
                 <p class="text-white/90 text-lg mb-10 max-w-2xl mx-auto">
-                    {{translate('Junte-se a milhares de angolanos que já usam o Kempaga para movimentar dinheiro sem complicações.')}}
+                    {{translate('Ganhe comissões, aumente o seu rendimento e ajude a digitalizar a economia de Angola. Junte-se à nossa rede de agentes.')}}
                 </p>
                 <a href="{{route('agent.agent-self-registration')}}" class="bg-white text-slate-900 font-bold py-4 px-10 rounded-full hover:bg-gray-100 transition-colors text-lg shadow-lg">
-                    {{translate('Criar Conta Gratuita')}}
+                    {{translate('Quero Ser Agente')}}
                 </a>
             </div>
         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.landing.app')
 
-@section('title', translate('Sobre Nós'))
+@section('title', translate('Sobre Nós') . ' | Kempaga')
 
 @section('content')
     <!-- Header -->
@@ -39,17 +39,34 @@
         </div>
     </section>
 
-    <!-- Stats / Registration from Home Style -->
+    <!-- Stats Section -->
     <section class="w-full bg-white dark:bg-[#050505] py-24 border-y border-gray-100 dark:border-gray-900 transition-colors">
         <div class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
              <h2 class="text-3xl lg:text-4xl font-bold mb-12">{{translate('Nossa Presença em Números')}}</h2>
              <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                 @foreach($data['business_statistics_section']['download_data'] as $stat)
+                 @php($stats = $data['business_statistics_section']['download_data'])
+                 @if(isset($stats))
+                    <!-- Downloads -->
                     <div class="bg-lightBg dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-brandBlue/10 hover:shadow-xl">
-                        <div class="text-4xl font-bold text-brandBlue mb-2">{{ $stat['count'] }}+</div>
-                        <div class="text-textMutedLight dark:text-textMutedDark font-semibold uppercase tracking-wider text-sm">{{ $stat['title'] }}</div>
+                        <div class="text-4xl font-bold text-brandBlue mb-2">{{ $stats['download_count'] ?? '0' }}+</div>
+                        <div class="text-textMutedLight dark:text-textMutedDark font-semibold uppercase tracking-wider text-sm">{{ translate('Downloads') }}</div>
+                        <p class="text-xs text-gray-400 mt-2">{{ $stats['download_sort_description'] ?? '' }}</p>
                     </div>
-                 @endforeach
+
+                    <!-- Reviews -->
+                    <div class="bg-lightBg dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-brandGreen/10 hover:shadow-xl">
+                        <div class="text-4xl font-bold text-brandGreen mb-2">{{ $stats['review_count'] ?? '0' }}</div>
+                        <div class="text-textMutedLight dark:text-textMutedDark font-semibold uppercase tracking-wider text-sm">{{ translate('Avaliações') }}</div>
+                        <p class="text-xs text-gray-400 mt-2">{{ $stats['review_sort_description'] ?? '' }}</p>
+                    </div>
+
+                    <!-- Countries/Users -->
+                    <div class="bg-lightBg dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-brandBlue/10 hover:shadow-xl">
+                        <div class="text-4xl font-bold text-brandBlue mb-2">{{ $stats['country_count'] ?? '0' }}+</div>
+                        <div class="text-textMutedLight dark:text-textMutedDark font-semibold uppercase tracking-wider text-sm">{{ translate('Utilizadores') }}</div>
+                        <p class="text-xs text-gray-400 mt-2">{{ $stats['country_sort_description'] ?? '' }}</p>
+                    </div>
+                 @endif
              </div>
         </div>
     </section>
@@ -61,7 +78,7 @@
             <div class="relative z-10">
                 <h2 class="text-3xl lg:text-5xl font-bold text-white mb-6">{{translate('Faça parte da revolução')}}</h2>
                 <a href="{{route('agent.agent-self-registration')}}" class="bg-white text-slate-900 font-bold py-4 px-10 rounded-full hover:bg-gray-100 transition-colors text-lg shadow-lg">
-                    {{translate('Torne-se um Agente')}}
+                    {{translate('Quero Ser Agente')}}
                 </a>
             </div>
         </div>
