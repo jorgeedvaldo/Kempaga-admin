@@ -60,31 +60,86 @@
         }
 
         /* Overriding theme colors using new variables */
-        .btn-primary, .btn--primary {
+        body {
+            background-color: var(--background) !important;
+            color: var(--text-primary);
+        }
+
+        .btn-primary, .btn--primary, .btn-info {
             background-color: var(--primary) !important;
             border-color: var(--primary) !important;
+            color: #fff !important;
         }
-        .btn-primary:hover, .btn--primary:hover {
+        .btn-primary:hover, .btn--primary:hover, .btn-info:hover {
             background-color: var(--primary-dark) !important;
             border-color: var(--primary-dark) !important;
         }
+        
         .text-primary { color: var(--primary) !important; }
         .bg-primary { background-color: var(--primary) !important; }
         
-        .navbar-vertical-aside {
-            background-color: var(--dark) !important;
+        /* Light Sidebar Styling */
+        .navbar-vertical-aside, .navbar-vertical-content {
+            background-color: var(--surface) !important;
         }
         
-        .nav-subtitle {
-            color: var(--text-muted) !important;
+        .navbar-vertical-aside {
+            border-right: 1px solid var(--border) !important;
+        }
+        
+        .navbar-vertical-aside .navbar-brand-wrapper {
+            background-color: var(--surface) !important;
+            border-bottom: 1px solid var(--border) !important;
         }
 
-        /* Adjusting sidebar active states to match secondary/green brand */
+        .navbar-vertical .nav-link {
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+        }
+
+        .navbar-vertical .nav-link:hover {
+            color: var(--primary) !important;
+            background-color: rgba(0, 120, 215, 0.05) !important;
+        }
+
         .navbar-vertical .active > .nav-link, 
         .navbar-vertical .nav-link.active, 
         .navbar-vertical .nav-link.show, 
         .navbar-vertical .show > .nav-link {
-            color: var(--secondary) !important;
+            color: var(--primary) !important;
+            background-color: rgba(0, 120, 215, 0.1) !important;
+            font-weight: 700;
+        }
+
+        .nav-subtitle {
+            color: var(--text-muted) !important;
+            padding-top: 1.5rem !important;
+        }
+
+        .navbar-vertical .nav-indicator-icon {
+            color: var(--text-muted) !important;
+        }
+
+        .navbar-vertical .active .nav-indicator-icon {
+            color: var(--primary) !important;
+        }
+
+        /* Card and Surface Styling */
+        .card {
+            border: 1px solid var(--border) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+            border-radius: 12px !important;
+        }
+
+        .card-header {
+            background-color: transparent !important;
+            border-bottom: 1px solid var(--border) !important;
+        }
+
+        /* Header / Topbar */
+        .navbar-main {
+            background-color: var(--surface) !important;
+            border-bottom: 1px solid var(--border) !important;
         }
     </style>
 </head>
