@@ -1,224 +1,134 @@
 @extends('layouts.landing.app')
 
-@section('title', translate('Blog Details'))
+@section('title', $blog->title)
 
 @section('content')
-
-    <div class="container">
-        <div class="row">
-            @if(count($articleLinks) > 0)
-                <div class="col-lg-3">
-                    <div class="article-menu-wrap bg-white sticky-top mt-5 pt-4 pt-lg-5">
-                        <div class="article-menu-button bg-white btn-circle scroll-arrow-btn shadow d-lg-none position-relative z-999" style="--size: 36px">
-                            <i class="tio-back-ui"></i>
-                            <i class="tio-menu-hamburger"></i>
-                        </div>
-                        <div class="in-this-article bg-white">
-                            <h2 class="mb-3 fs-20 ps-5 ps-lg-0">{{ translate('In this article:') }}</h2>
-                            <div class="d-flex flex-column gap-2 scrollspy-blog-details-menu">
-                                @foreach ($articleLinks as $link)
-                                    <a href="#{{ $link['id'] }}" class="rounded">{{ $link['text'] }}</a>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Article Header -->
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-20 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-brandBlue/5 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            @if($blog->blogCategory)
+                <span class="inline-block bg-brandBlue/10 text-brandBlue px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+                    {{ $blog->blogCategory->name }}
+                </span>
             @endif
+            
+            <h1 class="text-[2.5rem] lg:text-[4rem] font-bold mb-8 leading-[1.1] tracking-tight">
+                {{ $blog->title }}
+            </h1>
 
-            <div class="{{ count($articleLinks) > 0 ? 'col-lg-6' : 'col-lg-9' }}">
-                <div class="mt-5 pt-5"></div>
-                <div data-bs-spy="scroll" data-bs-target="#simple-list-example" data-bs-offset="0" data-bs-smooth-scroll="true" class="scrollspy-blog-details" tabindex="0">
-                    <div class="d-flex flex-column gap-3 align-items-center text-center mb-5">
-                        <div class="bg-primary-subtle rounded-pill fs-14 px-2">{{ $blog->blogCategory ? $blog->blogCategory->name : '' }}</div>
-                        <h1 class="fs-24 mb-0">{{ $blog->title }}</h1>
-                        <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
-                            @if($blog->writer)
-                                <div>{{ translate('by') }} <span>{{ $blog->writer }}</span></div>
-                            @endif
-                            <div class="border-end h-10"></div>
-                            @if($blog->click_count > 0)
-                                <div>{{ $blog->click_count }} {{ translate('views') }}</div>
-                            @endif
-
-                            <div class="border-end h-10"> </div>
-                            <div>
-                                @php
-                                    $publishDate = \Carbon\Carbon::parse($blog->publish_date);
-                                @endphp
-
-                                @if ($publishDate->isToday())
-                                    {{ ('Today') }}
-                                @elseif ($publishDate->diffInDays(now()) <= 7)
-                                    {{ $publishDate->diffForHumans() }}
-                                @else
-                                    {{ $publishDate->format('d M, Y') }}
-                                @endif
-                            </div>
-                        </div>
+            <div class="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-gray-500 uppercase tracking-wider">
+                @if($blog->writer)
+                    <div class="flex items-center gap-2">
+                        <span class="opacity-60">{{ translate('Escrito por') }}</span>
+                        <span class="text-slate-900 dark:text-white">{{ $blog->writer }}</span>
                     </div>
-                    <div>
-                        <img class="rounded w-100" src="{{ $blog->imageFullPath }}" alt="">
-                    </div>
-                    <div>
-                        {!! $updatedDescription !!}
-                    </div>
-
+                @endif
+                <div class="w-1.5 h-1.5 rounded-full bg-gray-300"></div>
+                <div>
+                    {{ \Carbon\Carbon::parse($blog->publish_date)->format('d M, Y') }}
                 </div>
+                @if($blog->click_count > 0)
+                    <div class="w-1.5 h-1.5 rounded-full bg-gray-300"></div>
+                    <div>{{ $blog->click_count }} {{ translate('visualizações') }}</div>
+                @endif
             </div>
-            <div class="col-lg-3">
-                <div class="position-sticky sticky-top">
-                    <div class="mt-5 pt-4 pt-lg-5"></div>
-
-                    <div class="border-bottom pb-3 mb-4 d-none d-lg-block">
-                        <h5 class="text-primary mb-3 text-center">{{ translate('Share Now') }}</h5>
-
-                        <div class="d-flex justify-content-center gap-3 flex-wrap">
-                            <!-- Facebook -->
-                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('blog.details', $blog->slug)) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/facebook.svg') }}" alt="Facebook">
-                            </a>
-
-                            <!-- Twitter -->
-                            <a target="_blank" href="https://twitter.com/intent/tweet?text={{ urlencode($blog->title) }}&url={{ urlencode(route('blog.details', $blog->slug)) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/twitter.svg') }}" alt="Twitter">
-                            </a>
-                            <!-- LinkedIn -->
-                            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('blog.details', $blog->slug)) }}&title={{ urlencode($blog->title) }}&summary={{ urlencode($blog->description) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/linkedin.svg') }}" alt="LinkedIn">
-                            </a>
-                            <!-- WhatsApp -->
-                            <a target="_blank" href="https://api.whatsapp.com/send?text={{ urlencode($blog->title . ' ' . route('blog.details', $blog->slug)) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/whatsapp.svg') }}" alt="WhatsApp">
-                            </a>
-                        </div>
-                    </div>
-
-                    @if($data['download_section']['status'] == 1 && $data['blog_download_app_button_status'] == 1)
-                        @if(($data['download_section']['data']['play_store_link'] != "" && $data['play_store_status'])  || ($data['download_section']['data']['app_store_link'] != "" && $data['app_store_status']))
-                            <div class="download-apps position-relative p-4 pb-5 z-1 rounded ov-hidden text-center" data-bg-img="{{ $data['background_image'] ? dynamicStorage(path: 'storage/app/public/business/' . $data['background_image']) : dynamicAsset(path: 'public/assets/landing/img/blog/blog-img.png') }}">
-                                <img width="60" class="mb-3 mt-1" src="{{$data['icon_image'] ? dynamicStorage(path: 'storage/app/public/business/' . $data['icon_image']) : dynamicStorage(path: 'storage/app/public/business') . '/' . \App\Models\BusinessSetting::where(['key' => 'landing_page_logo'])->first()->value}}" alt="">
-                                <h3 class="fs-20 mb-3">{{ $data['blog_download_app_button_title'] }}</h3>
-                                <p>{{ $data['blog_download_app_button_subtitle'] }}</p>
-
-                                <div class="d-flex gap-3 justify-content-center flex-wrap">
-                                    @if ($data['play_store_status'] && $data['download_section']['data']['play_store_link'] != "")
-                                        <a href="{{$data['download_section']['data']['play_store_link']}}"
-                                           class="btn btn-light px-3">
-                                            <img width="18" src="{{dynamicAsset(path: 'public/assets/admin/img/android.png')}}"
-                                                 alt="">
-                                            {{ translate('Google Play') }}
-                                        </a>
-                                    @endif
-                                    @if ($data['app_store_status']  && $data['download_section']['data']['app_store_link'] != "")
-                                        <a href="{{$data['download_section']['data']['app_store_link']}}"
-                                           class="btn btn-light px-3">
-                                            <img width="18" src="{{dynamicAsset(path: 'public/assets/admin/img/apple.png')}}" alt="">
-                                            {{ translate('App Store') }}
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-
-                        @endif
-                    @endif
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="social-shares position-relative z-1 py-3 mt-5">
-                    <div class="bg-white mx-auto max-content px-sm-5 px-4">
-                        <h5 class="mb-3 text-center">{{ translate('Share this article') }}</h5>
-
-                        <div class="d-flex justify-content-center gap-3 flex-wrap">
-                            <!-- Facebook -->
-                            <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('blog.details', $blog->slug)) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/facebook.svg') }}" alt="Facebook">
-                            </a>
-
-                            <!-- Twitter -->
-                            <a target="_blank" href="https://twitter.com/intent/tweet?text={{ urlencode($blog->title) }}&url={{ urlencode(route('blog.details', $blog->slug)) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/twitter.svg') }}" alt="Twitter">
-                            </a>
-                            <!-- LinkedIn -->
-                            <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('blog.details', $blog->slug)) }}&title={{ urlencode($blog->title) }}&summary={{ urlencode($blog->description) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/linkedin.svg') }}" alt="LinkedIn">
-                            </a>
-                            <!-- WhatsApp -->
-                            <a target="_blank" href="https://api.whatsapp.com/send?text={{ urlencode($blog->title . ' ' . route('blog.details', $blog->slug)) }}">
-                                <img width="30" src="{{ dynamicAsset(path: 'public/assets/landing/img/media/whatsapp.svg') }}" alt="WhatsApp">
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @if(count($popularBlogs) > 0)
-                <div class="col-12">
-                    <div class="mt-5">
-                        <div class="d-flex justify-content-between gap-3 mb-4">
-                            <h2 class="fs-24">{{ translate('Popular articles') }}!</h2>
-                            <a href="{{ route('popular-blog') }}" class="btn btn-link">{{ translate('See More') }}
-                                <i class="tio-arrow-forward"></i>
-                            </a>
-                        </div>
-
-                        <div class="row g-4">
-                            @foreach($popularBlogs as $popularBlog)
-                                <div class="col-lg-4 col-sm-6">
-                                    <div class="card border-0 shadow-custom overflow-hidden h-100">
-                                        <div class="d-flex flex-column gap-2 h-100">
-                                            <img width="348" class="w-100 object-fit-cover ratio-2" src="{{ $popularBlog->imageFullPath }}" alt="{{ $popularBlog->title }}">
-                                            <div class="media-body card-body d-flex flex-column gap-3 justify-content-between">
-                                                <a class="line-clamp clamp-2 fw-semibold fs-18 lh-sm" href="{{ route('blog.details', $popularBlog->slug) }}">{{ $popularBlog->title }}</a>
-                                                <div class="d-flex gap-3">
-                                                    <div class="bg-white rounded-pill fs-14 px-2 {{ $popularBlog->blogCategory ? 'border border-dark-subtle' : ''  }}">{{ $popularBlog->blogCategory ? $popularBlog->blogCategory->name : ' '  }}</div>
-                                                </div>
-                                                <div class="d-flex justify-content-between gap-2">
-                                                    <div class="d-flex gap-1 fs-14">
-                                                        @if($popularBlog->writer)
-                                                            <span class="">{{ translate('by') }}</span>
-                                                            <span class="line-clamp fw-medium max-w-20ch">{{ $popularBlog->writer }}</span>
-                                                        @endif
-                                                    </div>
-                                                    <div class="fs-14 whitespace-nowrap">
-                                                        @php
-                                                            $publishDate = \Carbon\Carbon::parse($popularBlog->publish_date);
-                                                        @endphp
-
-                                                        @if ($publishDate->isToday())
-                                                            {{ ('Today') }}
-                                                        @elseif ($publishDate->diffInDays(now()) <= 7)
-                                                            {{ $publishDate->diffForHumans() }}
-                                                        @else
-                                                            {{ $publishDate->format('d M, Y') }}
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            @endif
-
         </div>
     </div>
-@endsection
 
-@push('script_2')
-    <script>
-        function shareBlog(title, description, url) {
-            if (navigator.share) {
-                navigator.share({
-                    title: title,
-                    text: description,
-                    url: url
-                }).catch((error) => console.error('Error sharing:', error));
-            } else {
-                alert('Sharing is not supported in your browser.');
-            }
-        }
-    </script>
-@endpush
+    <!-- Main Content -->
+    <section class="max-w-[1400px] mx-auto px-6 lg:px-12 pb-24">
+        <div class="flex flex-col lg:flex-row gap-16">
+            
+            <!-- Sidebar: Article Navigation -->
+            @if(count($articleLinks) > 0)
+                <aside class="hidden lg:block w-1/4">
+                    <div class="sticky top-24">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">{{ translate('Neste artigo') }}</h4>
+                        <nav class="flex flex-col gap-3">
+                            @foreach ($articleLinks as $link)
+                                <a href="#{{ $link['id'] }}" class="text-slate-600 dark:text-gray-400 hover:text-brandBlue font-medium transition-colors py-1">
+                                    {{ $link['text'] }}
+                                </a>
+                            @endforeach
+                        </nav>
+                        
+                        <!-- Share Box -->
+                        <div class="mt-12 pt-12 border-t border-gray-100 dark:border-gray-900">
+                             <h4 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">{{ translate('Partilhar') }}</h4>
+                             <div class="flex gap-4">
+                                 <!-- Facebook -->
+                                 <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('blog.details', $blog->slug)) }}" class="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center hover:bg-brandBlue hover:text-white transition-all text-slate-400">
+                                     <i class="bi bi-facebook"></i>
+                                 </a>
+                                 <!-- Twitter -->
+                                 <a target="_blank" href="https://twitter.com/intent/tweet?text={{ urlencode($blog->title) }}&url={{ urlencode(route('blog.details', $blog->slug)) }}" class="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center hover:bg-brandBlue hover:text-white transition-all text-slate-400">
+                                     <i class="bi bi-twitter-x"></i>
+                                 </a>
+                                 <!-- LinkedIn -->
+                                 <a target="_blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ urlencode(route('blog.details', $blog->slug)) }}" class="w-10 h-10 rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center hover:bg-brandBlue hover:text-white transition-all text-slate-400">
+                                     <i class="bi bi-linkedin"></i>
+                                 </a>
+                             </div>
+                        </div>
+                    </div>
+                </aside>
+            @endif
+
+            <!-- Article Body -->
+            <div class="flex-1 max-w-3xl mx-auto lg:mx-0">
+                <div class="mb-12 rounded-[2.5rem] overflow-hidden shadow-2xl">
+                    <img class="w-full h-auto" src="{{ $blog->imageFullPath }}" alt="{{ $blog->title }}">
+                </div>
+                
+                <div class="prose prose-lg lg:prose-xl dark:prose-invert max-w-none text-slate-800 dark:text-gray-300 leading-relaxed article-content">
+                    {!! $updatedDescription !!}
+                </div>
+                
+                <!-- Mobile Share -->
+                <div class="lg:hidden mt-16 pt-8 border-t border-gray-100 dark:border-gray-900">
+                    <h4 class="text-center font-bold mb-6">{{ translate('Partilhar este artigo') }}</h4>
+                    <div class="flex justify-center gap-6">
+                        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(route('blog.details', $blog->slug)) }}" class="text-2xl text-slate-400 hover:text-brandBlue"><i class="bi bi-facebook"></i></a>
+                        <a target="_blank" href="https://twitter.com/intent/tweet?url={{ urlencode(route('blog.details', $blog->slug)) }}" class="text-2xl text-slate-400 hover:text-brandBlue"><i class="bi bi-twitter-x"></i></a>
+                        <a target="_blank" href="https://api.whatsapp.com/send?text={{ urlencode($blog->title . ' ' . route('blog.details', $blog->slug)) }}" class="text-2xl text-slate-400 hover:text-brandBlue"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Articles -->
+    @if(count($popularBlogs) > 0)
+        <section class="bg-slate-50 dark:bg-white/5 py-24">
+            <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+                <div class="flex items-center justify-between mb-12">
+                    <h2 class="text-3xl font-bold">{{ translate('Artigos Populares') }}</h2>
+                    <a href="{{ route('blog') }}" class="text-brandBlue font-bold flex items-center gap-2 group">
+                        {{ translate('Ver Todos') }}
+                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @foreach($popularBlogs as $popularBlog)
+                        <div class="bg-white dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden hover:-translate-y-2 transition-all duration-300 shadow-sm flex flex-col">
+                            <div class="aspect-video overflow-hidden">
+                                <img class="w-full h-full object-cover" src="{{ $popularBlog->imageFullPath }}" alt="{{ $popularBlog->title }}">
+                            </div>
+                            <div class="p-6 flex flex-col flex-1">
+                                <h3 class="font-bold mb-4 line-clamp-2 leading-tight">
+                                    <a href="{{ route('blog.details', $popularBlog->slug) }}" class="hover:text-brandBlue transition-colors">{{ $popularBlog->title }}</a>
+                                </h3>
+                                <div class="mt-auto text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                                    {{ \Carbon\Carbon::parse($popularBlog->publish_date)->format('d M, Y') }}
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+@endsection

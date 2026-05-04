@@ -1,23 +1,26 @@
 @extends('layouts.landing.app')
 
-@section('title', translate('Terms and Condition'))
-
+@section('title', translate('Termos e Condições'))
 
 @section('content')
-    <div class="overflow-hidden" data-bg-img="{{dynamicAsset(path: 'public/assets/landing/img/media/page-header-bg.png')}}">
-        <div class="container">
-            <div class="page-header text-center">
-                <h2 class="text-white mb-4" data-aos="fade-up" data-aos-duration="1000"
-                    data-aos-delay="300">{!! change_text_color_or_bg($data['terms_and_conditions_section']['title']) !!}</h2>
-                <p class="mx-w-480 mx-auto text-white fs-18" data-aos="fade-up" data-aos-duration="1000"
-                   data-aos-delay="500">{!! $data['terms_and_conditions_section']['sub_title'] !!}</p>
-            </div>
+    <!-- Header -->
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-20 relative overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-brandBlue/5 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="text-center relative z-10">
+            <h1 class="text-[3.5rem] lg:text-[4.5rem] font-bold mb-6 gradient-text">
+                {{translate('Termos de Uso')}}
+            </h1>
+            <p class="text-slate-700 dark:text-gray-300 text-[1.2rem] max-w-3xl mx-auto font-medium">
+                {!! $data['terms_and_conditions_section']['sub_title'] !!}
+            </p>
         </div>
     </div>
 
-    <section class="my-5">
-        <div class="container">
-            <div class="page-content">
+    <!-- Content -->
+    <section class="max-w-[1000px] mx-auto px-6 lg:px-12 py-10 pb-24">
+        <div class="bg-white dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-[2.5rem] p-8 lg:p-12 shadow-xl shadow-brandBlue/5 relative">
+            <div class="prose prose-lg dark:prose-invert max-w-none text-slate-800 dark:text-gray-300">
                 {!! change_text_color_or_bg(Helpers::get_business_settings('terms_and_conditions') ?? '') !!}
             </div>
         </div>

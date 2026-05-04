@@ -1,228 +1,117 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ dynamicAsset(path: 'public/assets/icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ dynamicAsset(path: 'public/assets/icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ dynamicAsset(path: 'public/assets/icons/favicon-16x16.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ dynamicAsset(path: 'public/assets/icons/favicon.ico') }}">
+    
     <title>@yield('title')</title>
     <meta name="_token" content="{{csrf_token()}}">
-
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-
-    <link rel="shortcut icon"
-          href="{{dynamicStorage(path: 'storage/app/public/favicon')}}/{{Helpers::get_business_settings('favicon') ?? null}}"/>
-
+    
+    <!-- Fonte 'Fredoka' -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/landing/css/bootstrap.min.css')}}">
-    <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/landing/css/bootstrap-icons.min.css')}}">
-    <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/admin/vendor/icon-set/style.css')}}">
-    <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/landing/plugins/swiper/swiper-bundle.min.css')}}">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuração do Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Fredoka', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#000000',
+                        darkCard: '#0a0a0c',
+                        lightBg: '#f8fafc',
+                        lightCard: '#ffffff',
+                        brandBlue: '#0066cc',
+                        brandBlueHover: '#0052a3', 
+                        brandGreen: '#33a337',
+                        brandGreenHover: '#267a29',  
+                        brandGreenBright: '#4ade80', 
+                        textMutedDark: '#a3a3a3',
+                        textMutedLight: '#64748b'
+                    }
+                }
+            }
+        }
+    </script>
 
-    <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/landing/css/style.css')}}">
-    <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/landing/css/custom.css')}}">
-
-    <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/admin')}}/css/toastr.css">
+    <style>
+        .bg-pattern-dark {
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 102, 204, 0.15), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(51, 163, 55, 0.1), transparent 40%);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0066cc, #4ade80);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom styles for existing components if needed */
+        .selection\:bg-brandBlue::selection { background-color: #0066cc; color: white; }
+    </style>
 
     @stack('css_or_js')
 </head>
+<body class="min-h-screen font-sans antialiased selection:bg-brandBlue selection:text-white bg-lightBg dark:bg-darkBg dark:bg-pattern-dark text-slate-900 dark:text-white transition-colors duration-300 overflow-x-hidden">
 
-<body>
-<div class="preloader">
-    <div class="spinner-grow" role="status">
-        <span class="visually-hidden">{{translate('Loading')}}...</span>
-    </div>
-</div>
+    @include('layouts.landing.partials._header')
 
-@include('layouts.landing.partials._header')
+    <main>
+        @yield('content')
+    </main>
 
-<main class="main-content d-flex flex-column">
-    @yield('content')
-</main>
+    @include('layouts.landing.partials._footer')
 
-<section class="bg-white pt-5">
-    <div class="newsletter-area">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-10">
-                    <div class="p-4 p-sm-5 rounded-10"
-                         data-bg-img="{{dynamicAsset(path: 'public/assets/landing/img/media/newsletter-bg.png')}}">
-                        <div
-                            class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 gap-md-5">
-                            <div class="d-flex flex-column gap-3">
-                                <h3 class="text-white">{{translate('Subscribe Newsletter')}}</h3>
-                                <p class="text-white">{{translate('get the latest')}} {{App\Models\BusinessSetting::where('key', 'business_name')->value('value') ?? '6cash'}} {{translate('offers delivered to your inbox')}}</p>
-                            </div>
-
-                            <form action="{{route('newsletter.subscribe')}}" method="POST"
-                                  class="newsletter-form flex-grow-1 mx-w w-22-rem">
-                                @csrf
-                                <div class="d-flex form-control px-1">
-                                    <input type="email" name="email"
-                                           class="border-0 px-2 text-dark bg-transparent w-100"
-                                           placeholder="Enter your email">
-                                    <button type="submit"
-                                            class="btn btn-secondary rounded px-3">{{translate('Subscribe')}}</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-     @include('layouts.landing.partials._footer')
-</section>
-
-<div class="progress-wrap">
-    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"/>
-    </svg>
-</div>
-
-<aside class="aside d-flex flex-column d-xl-none">
-    <div class="aside-overlay"></div>
-    <div class="aside-header">
-        <div class="d-flex pb-3 justify-content-between">
-            <a href="index.html">
-                <img width="100"
-                     src="{{dynamicStorage(path: 'storage/app/public/business') . '/' . \App\Models\BusinessSetting::where(['key' => 'landing_page_logo'])->first()->value}}"
-                     alt="">
-            </a>
-            <button class="aside-close-btn border-0 bg-transparent">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-    </div>
-    <div class="aside-body custom-scrollbar">
-        <ul class="main-nav nav">
-            <li><a class="{{Request::is('/') ? 'active' : ''}}" href="{{route('landing-page-home')}}">{{translate('Home')}}</a></li>
-            <li><a class="{{Request::is('pages/privacy-policy') ? 'active' : ''}}" href="{{route('pages.privacy-policy')}}">{{translate('Privacy Policy')}}</a></li>
-            <li><a class="{{Request::is('pages/terms-conditions') ? 'active' : ''}}" href="{{route('pages.terms-conditions')}}">{{translate('Terms & Condition')}}</a></li>
-            <li><a class="{{Request::is('pages/about-us') ? 'active' : ''}}" href="{{route('pages.about-us')}}">{{translate('About Us')}}</a></li>
-            @if(\App\CentralLogics\helpers::get_business_settings('blog_section_status'))
-                <li><a class="{{Request::is('blog*') || Request::is('popular-blog*') ? 'active' : ''}}" href="{{route('blog')}}">{{translate('Blog')}}</a></li>
-            @endif
-            @if(\App\CentralLogics\helpers::get_business_settings('faq_section_status'))
-                <li><a class="{{Request::is('faq')  ? 'active' : ''}}" href="{{route('faq')}}">{{translate('FAQ')}}</a></li>
-            @endif
-            <li><a class="{{Request::is('contact-us') ? 'active' : ''}}" href="{{route('contact-us')}}">{{translate('Contact Us')}}</a></li>
-        </ul>
-    </div>
-</aside>
-
-<script src="{{dynamicAsset(path: 'public/assets/landing/js/jquery-3.6.0.min.js')}}"></script>
-<script src="{{dynamicAsset(path: 'public/assets/landing/js/bootstrap.bundle.min.js')}}"></script>
-<script src="{{dynamicAsset(path: 'public/assets/landing/plugins/swiper/swiper-bundle.min.js')}}"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script src="{{dynamicAsset(path: 'public/assets/landing/js/main.js')}}"></script>
-
-<script src="{{dynamicAsset(path: 'public/assets/admin')}}/js/vendor.min.js"></script>
-
-@stack('script_2')
-
-<script>
-    "use strict";
-    //scrollArrowBtn
-    var categoryFilterList = $('.category-filter-list');
-    var scrollAmount = 350;
-
-    function updateArrowVisibility() {
-            var scrollLeft = categoryFilterList.scrollLeft();
-            var maxScrollLeft = categoryFilterList[0].scrollWidth - categoryFilterList[0].clientWidth;
-
-            if (scrollLeft === 0) {
-                    $('.scroll-arrow-btn.prev').hide();
-            } else {
-                    $('.scroll-arrow-btn.prev').show();
-            }
-
-            if (scrollLeft >= maxScrollLeft) {
-                    $('.scroll-arrow-btn.next').hide();
-            } else {
-                    $('.scroll-arrow-btn.next').show();
-            }
-    }
-
-    // Initial call to set button visibility on page load
-    updateArrowVisibility();
-
-    $('.scroll-arrow-btn.next').on('click', function() {
-            categoryFilterList.animate({
-                    scrollLeft: '+=' + scrollAmount
-            }, 500, updateArrowVisibility);
-    });
-
-    $('.scroll-arrow-btn.prev').on('click', function() {
-            categoryFilterList.animate({
-                    scrollLeft: '-=' + scrollAmount
-            }, 500, updateArrowVisibility);
-    });
-
-    // Update button visibility on scroll
-    categoryFilterList.on('scroll', updateArrowVisibility);
-
-    // Enable scroll with drag
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    categoryFilterList.on('mousedown touchstart', function(e) {
-            isDown = true;
-            startX = e.pageX || e.originalEvent.touches[0].pageX - categoryFilterList.offset().left;
-            scrollLeft = categoryFilterList.scrollLeft();
-            categoryFilterList.addClass('dragged');
-    });
-
-    categoryFilterList.on('mouseleave mouseup touchend', function() {
-            isDown = false;
-            categoryFilterList.removeClass('dragged');
-    });
-
-    categoryFilterList.on('mousemove touchmove', function(e) {
-            if (!isDown) return;
-            e.preventDefault();
-            var x = e.pageX || e.originalEvent.touches[0].pageX - categoryFilterList.offset().left;
-            var walk = (x - startX) * 2;
-            categoryFilterList.scrollLeft(scrollLeft - walk);
-            updateArrowVisibility();
-    });
-</script>
-
-<script>
-    $(document).on('ready', function () {
-        $('.js-toggle-password').each(function () {
-            new HSTogglePassword(this).init()
-        });
-
-        $('.js-validate').each(function () {
-            $.HSCore.components.HSValidation.init($(this));
-        });
-    });
-</script>
-
-
-<script src="{{dynamicAsset(path: 'public/assets/admin')}}/js/toastr.js"></script>
-{!! Toastr::message() !!}
-
-@if ($errors->any())
+    <script src="{{dynamicAsset(path: 'public/assets/landing/js/jquery-3.6.0.min.js')}}"></script>
     <script>
-        @foreach($errors->all() as $error)
-        toastr.error('{{$error}}', Error, {
-            CloseButton: true,
-            ProgressBar: true
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        function setInitialTheme() {
+            const savedTheme = localStorage.getItem('color-theme');
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                darkIcon?.classList.remove('hidden');
+                lightIcon?.classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                lightIcon?.classList.remove('hidden');
+                darkIcon?.classList.add('hidden');
+            }
+        }
+
+        themeToggleBtn?.addEventListener('click', function() {
+            darkIcon?.classList.toggle('hidden');
+            lightIcon?.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
         });
-        @endforeach
+
+        setInitialTheme();
     </script>
-@endif
+
+    @stack('script_2')
+    
+    <script src="{{dynamicAsset(path: 'public/assets/admin')}}/js/toastr.js"></script>
+    {!! Toastr::message() !!}
 </body>
 </html>

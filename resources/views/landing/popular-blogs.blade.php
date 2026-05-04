@@ -1,120 +1,105 @@
 @extends('layouts.landing.app')
 
-@section('title', translate('Popular Blog'))
+@section('title', translate('Artigos Populares'))
 
 @section('content')
-    <div class="overflow-hidden" data-bg-img="{{dynamicAsset(path: 'public/assets/landing/img/media/page-header-bg.png')}}">
-        <div class="container">
-            <div class="page-header popular-page-header text-center">
-                <h2 class="text-white mb-4" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="300">
-                    {!! change_text_color_or_bg(('##'. translate('Popular') .'##')) !!} {{ translate('Blogs') }}
-                </h2>
-            </div>
-        </div>
-    </div>
+    <!-- Header -->
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-20 relative overflow-hidden text-center">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-brandBlue/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <h1 class="text-[3.5rem] lg:text-[4.5rem] font-bold mb-6 gradient-text">
+            {{translate('Artigos Populares')}}
+        </h1>
+        <p class="text-slate-700 dark:text-gray-300 text-[1.2rem] max-w-2xl mx-auto font-medium mb-10">
+            {{ translate('Os conteúdos mais lidos e partilhados pela nossa comunidade.') }}
+        </p>
 
-    <div class="translate-middle-y position-relative">
-        <div class="mx-auto max-w-650">
-            <form action="{{ url()->current() }}" method="GET">
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto relative z-10 mb-12">
+            <form action="{{ url()->current() }}" method="GET" class="relative group">
                 @if(request('category'))
                     <input type="hidden" name="category" value="{{ request('category') }}">
                 @endif
-                <div class="d-flex border-primary form-control px-1" style="--bs-border-opacity: .4">
-                    <input type="search" name="search" id="search" class="border-0 px-2 text-dark bg-transparent w-100" value="{{ request('search') }}" placeholder="{{ translate('Search blog') }}">
-                    <button type="button" class="bg-transparent border-0"><i class="tio-search"></i></button>
+                <input type="search" name="search" id="search" value="{{ request('search') }}"
+                       class="w-full pl-14 pr-6 py-5 bg-white dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl focus:ring-2 focus:ring-brandBlue/50 focus:border-brandBlue outline-none transition-all text-lg"
+                       placeholder="{{ translate('Pesquisar nos populares...') }}">
+                <div class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brandBlue transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
             </form>
         </div>
+
+        <!-- Categories Slider -->
+        @if(count($categories) > 0)
+            <div class="flex flex-wrap justify-center gap-3 relative z-10">
+                <a class="px-6 py-2.5 rounded-full transition-all font-semibold {{ request('category') ? 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-gray-400 hover:bg-slate-200' : 'bg-brandBlue text-white shadow-lg shadow-brandBlue/20' }}"
+                   href="{{ url()->current() }}{{request('search')? ('?search='. request('search')) : '' }}">
+                    {{ translate('Todos') }}
+                </a>
+                @foreach($categories as $category)
+                    <a class="px-6 py-2.5 rounded-full transition-all font-semibold {{ request('category') == $category->slug ? 'bg-brandBlue text-white shadow-lg shadow-brandBlue/20' : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-gray-400 hover:bg-slate-200' }} change-category"
+                       data-id="{{ $category->id }}"
+                       href="{{ url()->current() }}?category={{ $category->slug }}{{request('search')? ('&&search='. request('search')) : '' }}">
+                        {{ $category->name }}
+                    </a>
+                @endforeach
+            </div>
+        @endif
     </div>
 
-    <div class="pt-2 pb-4">
-        <div class="container">
-            @if(count($categories) > 0)
-                <div class="col-lg-12">
-                    <div class="position-sticky bg-blur p-2 sticky-top">
-                        <div class="d-flex align-items-center position-relative category-tab px-5">
-                            <button class="btn btn-primary btn-circle scroll-arrow-btn prev position-absolute start-0">
-                                <i class="tio-chevron-left"></i>
-                            </button>
-
-                            <div class="category-filter-list d-flex text-nowrap gap-2 align-items-center overflow-x-auto scrollbar-none">
-                                <a class="btn btn-outline-primary px-4 lh-1 {{ request('category') ? '' : 'active' }}"
-                                   href="{{ url()->current() }}{{request('search')? ('?search='. request('search')) : '' }}">
-                                    {{ translate('All') }}
-                                </a>
-                                @foreach($categories as $category)
-                                    <a class="btn btn-outline-primary px-4 lh-1 {{ request('category') == $category->slug ? 'active' : '' }} change-category" data-id="{{ $category->id }}"
-                                       href="{{ url()->current() }}?category={{ $category->slug }}{{request('search')? ('&&search='. request('search')) : '' }}">
-                                        {{ $category->name }}
-                                    </a>
-                                @endforeach
+    <!-- Blog Posts Grid -->
+    <section class="max-w-[1400px] mx-auto px-6 lg:px-12 py-10 pb-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @forelse($popularBlogs as $key => $blog)
+                <div class="group bg-white dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-[2.5rem] overflow-hidden hover:-translate-y-2 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-brandBlue/5 flex flex-col">
+                    <!-- Image -->
+                    <div class="relative aspect-video overflow-hidden">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                             src="{{ $blog->imageFullPath }}" alt="{{ $blog->title }}">
+                        @if($blog->blogCategory)
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-white/90 dark:bg-black/80 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-brandBlue">
+                                    {{ $blog->blogCategory->name }}
+                                </span>
                             </div>
-
-                            <button class="btn btn-primary btn-circle scroll-arrow-btn next position-absolute end-0">
-                                <i class="tio-chevron-right"></i>
-                            </button>
+                        @endif
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="p-8 flex flex-col flex-1">
+                        <div class="flex items-center gap-4 text-xs font-semibold text-gray-400 mb-4 uppercase tracking-widest">
+                            <span>{{ \Carbon\Carbon::parse($blog->publish_date)->format('d M, Y') }}</span>
+                            @if($blog->writer)
+                                <div class="w-1 h-1 rounded-full bg-gray-300"></div>
+                                <span>{{ $blog->writer }}</span>
+                            @endif
+                        </div>
+                        
+                        <h3 class="text-xl lg:text-2xl font-bold mb-4 line-clamp-2 leading-tight group-hover:text-brandBlue transition-colors">
+                            <a href="{{ route('blog.details', $blog->slug) }}">{{ $blog->title }}</a>
+                        </h3>
+                        
+                        <div class="mt-auto pt-6 border-t border-gray-100 dark:border-gray-900 flex items-center justify-between">
+                            <a href="{{ route('blog.details', $blog->slug) }}" class="text-brandBlue font-bold flex items-center gap-2 group/link">
+                                {{ translate('Ler Mais') }}
+                                <svg class="w-4 h-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
                         </div>
                     </div>
                 </div>
-            @endif
-
-            <div class="row g-4 pt-3">
-                @forelse($popularBlogs as $key => $blog)
-                    <div class="col-md-4">
-
-                        <div class="card border-0 shadow-custom overflow-hidden h-100">
-                            <div class="d-flex flex-column gap-2 h-100">
-                                <img width="348" class="w-100 object-fit-cover ratio-2" src="{{ $blog->imageFullPath }}" alt="{{ $blog->title }}">
-                                <div class="media-body card-body d-flex flex-column gap-3 justify-content-between">
-                                    <a class="line-clamp clamp-2 fw-semibold fs-18 lh-sm" href="{{ route('blog.details', $blog->slug) }}">{{ $blog->title }}</a>
-                                    <div class="d-flex gap-3">
-                                        <div class="bg-white rounded-pill fs-14 px-2 {{ $blog->blogCategory ? 'border border-dark-subtle' : ''  }}">{{ $blog->blogCategory ? $blog->blogCategory->name : ' '  }}</div>
-                                    </div>
-                                    <div class="d-flex justify-content-between gap-2">
-                                        <div class="d-flex gap-1 fs-14">
-                                            @if($blog->writer)
-                                                <span class="">{{ translate('by') }}</span>
-                                                <span class="line-clamp fw-medium max-w-20ch">{{ $blog->writer }}</span>
-                                            @endif
-
-                                        </div>
-                                        <div class="fs-14 whitespace-nowrap">
-                                            @php
-                                                $publishDate = \Carbon\Carbon::parse($blog->publish_date);
-                                            @endphp
-
-                                            @if ($publishDate->isToday())
-                                                {{ ('Today') }}
-                                            @elseif ($publishDate->diffInDays(now()) <= 7)
-                                                {{ $publishDate->diffForHumans() }}
-                                            @else
-                                                {{ $publishDate->format('d M, Y') }}
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            @empty
+                <div class="col-span-full text-center py-20 bg-white dark:bg-darkCard border border-gray-200 dark:border-gray-800 rounded-[2.5rem]">
+                    <div class="w-20 h-20 bg-slate-50 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                         <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                @empty
-                    <div class="card shadow-custom border-0 mt-4">
-                        <div class="card-body py-5 my-5">
-                            <div
-                                class="d-flex flex-column gap-2 align-items-center text-center max-w-410 mx-auto">
-                                <img width="54" class="mb-3"
-                                     src="{{dynamicAsset(path: 'public/assets/landing/img/media/empty-blog.png')}}" alt="">
-                                <h3 class="fs-22">{{ translate('Search no result found') }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                @endforelse
-            </div>
-
-            <div class="d-flex justify-content-end my-3">
-                {!! $popularBlogs->links() !!}
-            </div>
+                    <h3 class="text-2xl font-bold mb-2">{{ translate('Nenhum resultado encontrado') }}</h3>
+                </div>
+            @endforelse
         </div>
-    </div>
+
+        <div class="mt-16 flex justify-center">
+            {!! $popularBlogs->links() !!}
+        </div>
+    </section>
 @endsection
 
 @push('script_2')
@@ -122,24 +107,16 @@
         // category click count increment
         $(document).on('click', '.change-category', function () {
             let categoryId = $(this).data('id');
-
             $.ajax({
                 url: '/admin/blog/category/count-increment/' + categoryId,
-                method: 'GET',
-                success: function (response) {
-
-                },
-                error: function (xhr) {
-
-                }
+                method: 'GET'
             });
         });
 
-        mySearchBar = document.getElementById('search');
-        mySearchBar.addEventListener('input', (e) => {
+        const mySearchBar = document.getElementById('search');
+        mySearchBar?.addEventListener('input', (e) => {
             if (!e.currentTarget.value)
                 window.location.href = "{{ route('popular-blog') }}";
-
-        })
+        });
     </script>
 @endpush

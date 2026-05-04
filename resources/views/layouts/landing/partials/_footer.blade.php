@@ -1,97 +1,56 @@
-<div class="footer">
-    <div class="footer-main overflow-hidden">
-        <img src="{{dynamicAsset(path: 'public/assets/landing/img/media/footer-bg.svg')}}" alt="" class="svg footer-bg">
-        <div class="container">
-            <div class="row gy-5">
-                <div class="col-lg-4">
-                    <div class="widget widget__about mb-4 text-center text-sm-start mx-auto mx-sm-0"
-                         data-aos="fade-left" data-aos-duration="500" data-aos-delay="200">
-                        <img width="120" class="mb-3"
-                             src="{{dynamicStorage(path: 'storage/app/public/business') . '/' . \App\Models\BusinessSetting::where(['key' => 'landing_page_logo'])->first()->value}}"
-                             alt="">
-                        <p>{{\App\CentralLogics\Helpers::get_business_settings('business_short_description')}}</p>
-                    </div>
-                    <div class="widget widget__socials justify-content-center justify-content-sm-start"
-                         data-aos="fade-left" data-aos-duration="500" data-aos-delay="200">
-                        @php($socialMedia = \App\Models\SocialMedia::where('status', 1)->get())
-                        @if (isset($socialMedia))
-                            @foreach ($socialMedia as $social)
-                                <a href="{{ $social->link }}" target="_blank"><i class="bi bi-{{ $social->name }}"></i></a>
-                            @endforeach
-                        @endif
-                    </div>
+<footer class="bg-white dark:bg-[#050505] border-t border-gray-100 dark:border-gray-900 pt-16 pb-8">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-12">
+            
+            <!-- Coluna 1: Marca -->
+            <div>
+                <div class="flex items-center cursor-pointer select-none mb-4" onclick="window.location.href='{{route('landing-page-home')}}'">
+                    <img src="{{ dynamicAsset(path: 'public/assets/logo-kempaga.png') }}" alt="Kempaga Logo" class="h-10 w-auto">
                 </div>
-                <div class="col-lg-8">
-                    <div class="row gy-5">
-                        <div class="col-sm-4">
-                            <div class="widget widget__links text-center text-sm-start" data-aos="fade-left"
-                                 data-aos-duration="700" data-aos-delay="300">
-                                <h4 class="widget__title">{{translate('Quick Links')}}</h4>
-
-                                <ul class="d-flex flex-column gap-2">
-                                    <li><a class="{{Request::is('/') ? 'active' : ''}}"
-                                           href="{{route('landing-page-home')}}">{{translate('Home Page')}}</a></li>
-                                    <li><a class="{{Request::is('pages/about-us') ? 'active' : ''}}"
-                                           href="{{route('pages.about-us')}}">{{translate('About Us')}}</a></li>
-                                    <li>
-                                        <a href="{{Request::is('/') ? '#how-it-works-section' : route('landing-page-home') . '#how-it-works-section' }}">{{translate('How It Works')}}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="widget widget__links text-center text-sm-start" data-aos="fade-left"
-                                 data-aos-duration="800" data-aos-delay="400">
-                                <h4 class="widget__title">{{translate('Help & Support')}}</h4>
-
-                                <ul class="d-flex flex-column gap-2">
-                                    <li><a class="{{Request::is('contact-us') ? 'active' : ''}}"
-                                           href="{{route('contact-us')}}">{{translate('Contact Us')}}</a></li>
-                                    <li><a class="{{Request::is('pages/privacy-policy') ? 'active' : ''}}"
-                                           href="{{route('pages.privacy-policy')}}">{{translate('Privacy Policy')}}</a>
-                                    </li>
-                                    <li><a class="{{Request::is('pages/terms-conditions') ? 'active' : ''}}"
-                                           href="{{route('pages.terms-conditions')}}">{{translate('Terms & Condition')}}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="widget widget__links text-center text-sm-start" data-aos="fade-left"
-                                 data-aos-duration="800" data-aos-delay="500">
-                                <h4 class="widget__title">{{translate('Get It Now')}}</h4>
-
-                                <div class="d-flex flex-column gap-3">
-                                    @if ($data['download_section']['data']['play_store_link'] != "")
-                                        <a href="{{$data['download_section']['data']['play_store_link']}}"><img
-                                                width="130"
-                                                src="{{dynamicAsset(path: 'public/assets/landing/img/media/google_play_btn.png')}}"
-                                                alt=""></a>
-                                    @endif
-                                    @if ($data['download_section']['data']['app_store_link'] != "")
-                                        <a href="{{$data['download_section']['data']['app_store_link']}}"><img
-                                                width="130"
-                                                src="{{dynamicAsset(path: 'public/assets/landing/img/media/app_store_btn.png')}}"
-                                                alt=""></a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <p class="text-textMutedLight dark:text-textMutedDark text-sm leading-relaxed mb-6 max-w-xs">
+                    {{translate('A sua carteira digital completa em Angola. Pague com facilidade, viva com liberdade.')}}
+                </p>
+                <!-- Sociais -->
+                <div class="flex gap-4">
+                    @php($socialMedia = \App\Models\SocialMedia::where('status', 1)->get())
+                    @if (isset($socialMedia))
+                        @foreach ($socialMedia as $social)
+                            <a href="{{ $social->link }}" target="_blank" class="text-gray-400 hover:text-brandBlue transition-colors"><i class="bi bi-{{ $social->name }}"></i></a>
+                        @endforeach
+                    @endif
                 </div>
+            </div>
+
+            <!-- Coluna 2: Empresa -->
+            <div>
+                <h4 class="font-bold mb-4">{{translate('Empresa')}}</h4>
+                <ul class="space-y-2 text-sm text-textMutedLight dark:text-textMutedDark">
+                    <li><a href="{{route('pages.about-us')}}" class="hover:text-brandBlue transition-colors">{{translate('Sobre Nós')}}</a></li>
+                    <li><a href="{{route('blog')}}" class="hover:text-brandBlue transition-colors">{{translate('Blog')}}</a></li>
+                    <li><a href="{{route('contact-us')}}" class="hover:text-brandBlue transition-colors">{{translate('Contactos')}}</a></li>
+                </ul>
+            </div>
+
+            <!-- Coluna 3: Suporte -->
+            <div>
+                <h4 class="font-bold mb-4">{{translate('Suporte')}}</h4>
+                <ul class="space-y-2 text-sm text-textMutedLight dark:text-textMutedDark">
+                    <li><a href="{{route('faq')}}" class="hover:text-brandBlue transition-colors">{{translate('FAQ')}}</a></li>
+                    <li><a href="{{route('pages.terms-conditions')}}" class="hover:text-brandBlue transition-colors">{{translate('Termos de Uso')}}</a></li>
+                    <li><a href="{{route('pages.privacy-policy')}}" class="hover:text-brandBlue transition-colors">{{translate('Privacidade')}}</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-textMutedLight dark:text-textMutedDark">
+            <p>&copy; {{ date('Y') }} {{ \App\Models\BusinessSetting::where(['key' => 'business_name'])->first()->value }}. {{translate('Todos os direitos reservados.')}}</p>
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <span class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-brandGreenBright"></div>
+                    {{translate('Kempaga Digital Wallet')}}
+                </span>
             </div>
         </div>
     </div>
-    <div class="footer-bottom text-center">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <p class="text-center text-md-left mb-2 mb-md-0">
-                        &copy; {{\App\CentralLogics\Helpers::get_business_settings('business_name')}}.
-                        <span>{{\App\CentralLogics\Helpers::get_business_settings('footer_text')}}</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+</footer>
