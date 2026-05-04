@@ -28,6 +28,65 @@
 
     <script src="{{dynamicAsset(path: 'public/assets/admin')}}/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
     <link rel="stylesheet" href="{{dynamicAsset(path: 'public/assets/admin/css/toastr.css')}}">
+
+    <style>
+        :root {
+            --primary: #0078D7;
+            --primary-dark: #0050B3;
+
+            --secondary: #39B54A;
+            --secondary-dark: #00843D;
+
+            --dark: #0B1D33;
+            --white: #FFFFFF;
+
+            --background: #F5F7FA;
+            --surface: #FFFFFF;
+
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-muted: #9CA3AF;
+
+            --border: #E5E7EB;
+
+            --success: #39B54A;
+            --warning: #F59E0B;
+            --danger: #E11D48;
+            --info: #0078D7;
+
+            --gradient-primary: linear-gradient(135deg, #0078D7 0%, #39B54A 100%);
+            --gradient-dark: linear-gradient(135deg, #0B1D33 0%, #0050B3 100%);
+            --gradient-soft: linear-gradient(135deg, #F5F7FA 0%, #EAF7EF 100%);
+        }
+
+        /* Overriding theme colors using new variables */
+        .btn-primary, .btn--primary {
+            background-color: var(--primary) !important;
+            border-color: var(--primary) !important;
+        }
+        .btn-primary:hover, .btn--primary:hover {
+            background-color: var(--primary-dark) !important;
+            border-color: var(--primary-dark) !important;
+        }
+        .text-primary { color: var(--primary) !important; }
+        .bg-primary { background-color: var(--primary) !important; }
+        
+        .navbar-vertical-aside {
+            background-color: var(--dark) !important;
+        }
+        
+        .nav-subtitle {
+            color: var(--text-muted) !important;
+        }
+
+        /* Adjusting sidebar active states to match secondary/green brand */
+        .navbar-vertical .active > .nav-link, 
+        .navbar-vertical .nav-link.active, 
+        .navbar-vertical .nav-link.show, 
+        .navbar-vertical .show > .nav-link {
+            color: var(--secondary) !important;
+        }
+    </style>
 </head>
 
 <body class="footer-offset">
