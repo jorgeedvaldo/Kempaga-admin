@@ -7,6 +7,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" type="image/x-icon" href="{{dynamicAsset(path: 'public/assets/icons/favicon.ico')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{dynamicAsset(path: 'public/assets/icons/favicon-16x16.png')}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{dynamicAsset(path: 'public/assets/icons/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{dynamicAsset(path: 'public/assets/icons/favicon-48x48.png')}}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{dynamicAsset(path: 'public/assets/icons/apple-touch-icon.png')}}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{dynamicAsset(path: 'public/assets/icons/android-chrome-192x192.png')}}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{dynamicAsset(path: 'public/assets/icons/android-chrome-512x512.png')}}">
 
     <script src="{{ dynamicAsset(path: 'js/app.js') }}" defer></script>
 
