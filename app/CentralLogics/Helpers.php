@@ -331,6 +331,10 @@ class Helpers
         /**
          * Save image
          */
+        if ($format === 'webp') {
+            imagepalettetotruecolor($gdImage);
+        }
+
         $saved = match ($format) {
             'jpg', 'jpeg' => imagejpeg($gdImage, $savePath, 85),
             'png'         => imagepng($gdImage, $savePath, -1),
