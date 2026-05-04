@@ -39,16 +39,8 @@ Route::get('/fix-server', function () {
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
 
-        // 2. Verifica se o comando de instalação existe
-        $commands = \Illuminate\Support\Facades\Artisan::all();
-        if (!isset($commands['passport:install'])) {
-            return "ERRO: O Laravel não encontrou o pacote Passport no servidor. <br> 
-                     Certifique-se de que você enviou a pasta 'vendor' completa para o servidor.";
-        }
-
         // 3. Tenta o comando de instalação completo (ele já gera as chaves)
         \Illuminate\Support\Facades\Artisan::call('storage:link');
-        \Illuminate\Support\Facades\Artisan::call('passport:install', ['--force' => true]);
 
         return "SUCESSO: Storage link e Passport configurados!";
     } catch (\Exception $e) {
