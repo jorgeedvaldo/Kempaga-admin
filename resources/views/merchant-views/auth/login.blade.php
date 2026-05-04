@@ -152,15 +152,19 @@
                                 </div>
 
                                 <div class="js-form-message form-group">
-                                    <input type="text" class="form-control __form-control __form-control-input"
+                                    <input type="text" class="form-control __form-control __form-control-input {{ $errors->has('phone') ? 'border-danger' : '' }}"
                                         name="phone" id="phone" required tabindex="1"
                                         placeholder="{{translate('Enter your phone no.')}}"
-                                        data-msg="{{translate('Please enter a valid phone number.')}}">
+                                        data-msg="{{translate('Please enter a valid phone number.')}}"
+                                        value="{{ old('phone') }}">
+                                    @error('phone')
+                                        <div class="text-danger mt-1 small font-weight-bold">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="js-form-message form-group">
                                     <div class="input-group input-group-merge">
-                                        <input type="password" class="js-toggle-password form-control __form-control"
+                                        <input type="password" class="js-toggle-password form-control __form-control {{ $errors->has('password') ? 'border-danger' : '' }}"
                                             name="password" id="signupSrPassword"
                                             placeholder="{{translate('Enter your password')}}"
                                             aria-label="8+ characters required" required
@@ -177,6 +181,9 @@
                                             </a>
                                         </div>
                                     </div>
+                                    @error('password')
+                                        <div class="text-danger mt-1 small font-weight-bold">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 @php($recaptcha = \App\CentralLogics\Helpers::get_business_settings('recaptcha'))
@@ -185,7 +192,7 @@
                                 @else
                                     <div class="row p-2">
                                         <div class="col-6 pr-0">
-                                            <input type="text" class="form-control form-control-lg border-none"
+                                            <input type="text" class="form-control form-control-lg {{ $errors->has('default_captcha_value') ? 'border-danger' : 'border-none' }}"
                                                 name="default_captcha_value" value=""
                                                 placeholder="{{translate('Enter captcha')}}" autocomplete="off">
                                         </div>
@@ -196,11 +203,12 @@
                                                     class="input-field h-75 rounded-10 border-bottom-0 width-90-percent"
                                                     id="default_recaptcha_id" alt="{{ translate('recaptcha') }}">
                                                 <i class="tio-refresh icon"></i>
-
                                             </a>
-
                                         </div>
                                     </div>
+                                    @error('default_captcha_value')
+                                        <div class="text-danger mt-1 small font-weight-bold" style="padding-left: 8px;">{{ $message }}</div>
+                                    @enderror
                                 @endif
 
                                 @if(env('APP_MODE') == 'demo')

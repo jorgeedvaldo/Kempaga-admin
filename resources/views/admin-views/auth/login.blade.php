@@ -57,7 +57,7 @@
     <div class="absolute inset-0 pointer-events-none hidden dark:block" style="background-image: radial-gradient(circle at 20% 80%, rgba(0, 120, 215, 0.08), transparent 40%), radial-gradient(circle at 80% 20%, rgba(57, 181, 74, 0.08), transparent 40%);"></div>
 
     <div class="relative z-10">
-        <h1 class="text-4xl font-bold tracking-tight"><span class="text-brandPurple">Kem</span><span class="text-brandGreen">paga</span></h1>
+        <img src="{{dynamicAsset(path: 'public/assets/logo-kempaga.png')}}" alt="Kempaga Logo" class="h-14 w-auto">
     </div>
 
     <div class="relative z-10 max-w-lg mt-auto mb-auto">
@@ -71,7 +71,7 @@
 
 <div class="w-full lg:w-1/2 flex flex-col relative h-screen overflow-y-auto">
     <div class="flex justify-between items-center p-6 lg:hidden">
-        <h1 class="text-3xl font-bold tracking-tight"><span class="text-brandPurple">Kem</span><span class="text-brandGreen">paga</span></h1>
+        <img src="{{dynamicAsset(path: 'public/assets/logo-kempaga.png')}}" alt="Kempaga Logo" class="h-10 w-auto">
         <button id="theme-toggle-mobile" class="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-slate-800 dark:text-yellow-400 focus:outline-none">
             <svg id="theme-toggle-light-icon-mobile" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 4.22a1 1 0 011.415 0l.708.708a1 1 0 01-1.414 1.414l-.708-.708a1 1 0 010-1.414zM16 10a1 1 0 011 1h1a1 1 0 110-2h-1a1 1 0 01-1 1zm-4.22 4.22a1 1 0 010 1.415l-.708.708a1 1 0 01-1.414-1.414l.708-.708a1 1 0 011.415 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22-4.22a1 1 0 01-1.415 0l-.708-.708a1 1 0 011.414-1.414l.708.708a1 1 0 010 1.414zM4 10a1 1 0 01-1-1H2a1 1 0 110 2h1a1 1 0 011-1zm4.22-4.22a1 1 0 010-1.415l.708-.708a1 1 0 011.414 1.414l-.708.708a1 1 0 01-1.415 0z"></path><path d="M10 14a4 4 0 100-8 4 4 0 000 8z"></path></svg>
             <svg id="theme-toggle-dark-icon-mobile" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
@@ -96,16 +96,28 @@
                 @csrf
                 <div>
                     <label for="phone" class="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">{{translate('E-mail ou Nº de Telefone')}}</label>
-                    <input type="text" id="phone" name="phone" required class="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#15111f] border border-gray-200 dark:border-gray-800 rounded-xl text-slate-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brandPurple/50 focus:border-brandPurple transition-all" placeholder="{{translate('Enter your phone no.')}}">
+                    <input type="text" id="phone" name="phone" required class="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#15111f] border {{ $errors->has('phone') ? 'border-red-500 ring-2 ring-red-500/20' : 'border-gray-200 dark:border-gray-800' }} rounded-xl text-slate-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="{{translate('Enter your phone no.')}}" value="{{ old('phone') }}">
+                    @error('phone')
+                        <p class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
                 <div>
                     <label for="password" class="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">{{translate('Palavra-passe')}}</label>
                     <div class="relative">
-                        <input type="password" id="password" name="password" required class="w-full pl-4 pr-12 py-3.5 bg-gray-50 dark:bg-[#15111f] border border-gray-200 dark:border-gray-800 rounded-xl text-slate-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brandPurple/50 focus:border-brandPurple transition-all" placeholder="••••••••">
-                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-brandPurple focus:outline-none">
+                        <input type="password" id="password" name="password" required class="w-full pl-4 pr-12 py-3.5 bg-gray-50 dark:bg-[#15111f] border {{ $errors->has('password') ? 'border-red-500 ring-2 ring-red-500/20' : 'border-gray-200 dark:border-gray-800' }} rounded-xl text-slate-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="••••••••">
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary focus:outline-none">
                             <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         </button>
                     </div>
+                    @error('password')
+                        <p class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
                 @php($recaptcha = Helpers::get_business_settings('recaptcha'))
@@ -116,13 +128,19 @@
                 @else
                     <input type="hidden" name="set_default_captcha" id="set_default_captcha_value" value="1">
                     <div>
-                @endif
+                <div>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" class="w-full px-3 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-slate-900" name="default_captcha_value" placeholder="{{translate('Enter captcha')}}" autocomplete="off">
+                        <input type="text" class="w-full px-3 py-3.5 bg-gray-50 border {{ $errors->has('default_captcha_value') ? 'border-red-500 ring-2 ring-red-500/20' : 'border-gray-200' }} rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" name="default_captcha_value" placeholder="{{translate('Enter captcha')}}" autocomplete="off">
                         <a class="refresh-recaptcha cursor-pointer" title="{{translate('Click to refresh')}}">
                             <img src="{{ URL('/admin/auth/code/captcha/1') }}" class="h-[52px] w-full rounded-xl border border-gray-200 object-contain hover:scale-100 transition-none" id="default_recaptcha_id" alt="{{ translate('recaptcha') }}" style="transform: none !important;">
                         </a>
                     </div>
+                    @error('default_captcha_value')
+                        <p class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
                 @if(env('APP_MODE')=='demo')
