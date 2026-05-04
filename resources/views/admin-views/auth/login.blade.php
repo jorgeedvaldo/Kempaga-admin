@@ -27,19 +27,34 @@
                 extend: {
                     fontFamily: { sans: ['Fredoka', 'sans-serif'] },
                     colors: {
-                        darkBg: '#08050e', darkCard: '#110d18', lightBg: '#f8fafc', lightCard: '#ffffff',
-                        brandPurple: '#872ccb', brandPurpleHover: '#6a1d9e', brandGreen: '#107123',
-                        brandGreenHover: '#0b5318', brandGreenBright: '#24a13f', textMutedDark: '#a3a3a3',
-                        textMutedLight: '#64748b'
+                        primary: '#0078D7',
+                        primaryDark: '#0050B3',
+                        secondary: '#39B54A',
+                        secondaryDark: '#00843D',
+                        dark: '#0B1D33',
+                        background: '#F5F7FA',
+                        surface: '#FFFFFF',
+                        textPrimary: '#111827',
+                        textSecondary: '#6B7280',
+                        textMuted: '#9CA3AF',
+                        brandPurple: '#0078D7', // Alias for backward compatibility in this file
+                        brandPurpleHover: '#0050B3',
+                        brandGreen: '#39B54A',
+                        brandGreenHover: '#00843D',
+                        brandGreenBright: '#39B54A',
+                        darkBg: '#0B1D33',
+                        lightBg: '#F5F7FA',
+                        textMutedDark: '#9CA3AF',
+                        textMutedLight: '#6B7280'
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="min-h-screen font-sans antialiased selection:bg-brandPurple selection:text-white text-slate-900 dark:text-white transition-colors duration-300 overflow-hidden flex bg-white dark:bg-[#0c0914]">
+<body class="min-h-screen font-sans antialiased selection:bg-primary selection:text-white text-textPrimary dark:text-white transition-colors duration-300 overflow-hidden flex bg-background dark:bg-dark">
 <div class="hidden lg:flex lg:w-1/2 bg-lightBg dark:bg-darkBg relative flex-col justify-between p-12 overflow-hidden border-r border-gray-200 dark:border-gray-800">
-    <div class="absolute inset-0 pointer-events-none hidden dark:block" style="background-image: radial-gradient(circle at 20% 80%, rgba(135, 44, 203, 0.08), transparent 40%), radial-gradient(circle at 80% 20%, rgba(16, 113, 35, 0.08), transparent 40%);"></div>
+    <div class="absolute inset-0 pointer-events-none hidden dark:block" style="background-image: radial-gradient(circle at 20% 80%, rgba(0, 120, 215, 0.08), transparent 40%), radial-gradient(circle at 80% 20%, rgba(57, 181, 74, 0.08), transparent 40%);"></div>
 
     <div class="relative z-10">
         <h1 class="text-4xl font-bold tracking-tight"><span class="text-brandPurple">Kem</span><span class="text-brandGreen">paga</span></h1>
@@ -51,7 +66,7 @@
         <p class="text-textMutedLight dark:text-textMutedDark text-lg">{{translate('Gira os seus Kwanzas, Criptomoedas e divisas estrangeiras com a facilidade do Multicaixa Express. Bem-vindo de volta ao controlo do seu dinheiro.')}}</p>
     </div>
 
-    <div class="absolute -bottom-20 -right-20 w-[400px] h-[400px] bg-brandPurple/20 dark:bg-brandPurple/10 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-lighten pointer-events-none"></div>
+    <div class="absolute -bottom-20 -right-20 w-[400px] h-[400px] bg-primary/20 dark:bg-primary/10 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-lighten pointer-events-none"></div>
 </div>
 
 <div class="w-full lg:w-1/2 flex flex-col relative h-screen overflow-y-auto">
