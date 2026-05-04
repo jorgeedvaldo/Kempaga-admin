@@ -2198,4 +2198,13 @@
   'Business Name' => 'Business Name',
   'Welcome to Kempaga' => 'Welcome to Kempaga',
   'Kempaga is a secured and user-friendly digital wallet' => 'Kempaga is a secured and user-friendly digital wallet',
+  'Acesso Seguro' => 'Acesso Seguro',
+  'A sua vida financeira' => 'A sua vida financeira',
+  'num só lugar.' => 'Num só lugar.',
+  'Gira os seus Kwanzas, Criptomoedas e divisas estrangeiras com a facilidade do Multicaixa Express. Bem-vindo de volta ao controlo do seu dinheiro.' => 'Gira os seus Kwanzas, Criptomoedas e divisas estrangeiras com a facilidade do Multicaixa Express. Bem-vindo de volta ao controlo do seu dinheiro.',
+  'Iniciar Sessão' => 'Iniciar Sessão',
+  'Introduza os seus dados para aceder à conta.' => 'Introduza os seus dados para aceder à conta.',
+  'E-mail ou Nº de Telefone' => 'E-mail ou Nº de Telefone',
+  'Palavra-passe' => 'Palavra-passe',
+  'Entrar' => 'Entrar',
 );

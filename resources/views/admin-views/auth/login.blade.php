@@ -121,14 +121,13 @@
                 </div>
 
                 @php($recaptcha = Helpers::get_business_settings('recaptcha'))
+                <input type="hidden" name="set_default_captcha" id="set_default_captcha_value" value="{{ (isset($recaptcha) && $recaptcha['status'] == 1) ? '0' : '1' }}">
+                
                 @if(isset($recaptcha) && $recaptcha['status'] == 1)
                     <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
-                    <input type="hidden" name="set_default_captcha" id="set_default_captcha_value" value="0">
-                    <div class="hidden" id="reload-captcha">
-                @else
-                    <input type="hidden" name="set_default_captcha" id="set_default_captcha_value" value="1">
-                    <div>
-                <div>
+                @endif
+
+                <div id="reload-captcha" class="{{ (isset($recaptcha) && $recaptcha['status'] == 1) ? 'hidden' : '' }}">
                     <div class="grid grid-cols-2 gap-2">
                         <input type="text" class="w-full px-3 py-3.5 bg-gray-50 border {{ $errors->has('default_captcha_value') ? 'border-red-500 ring-2 ring-red-500/20' : 'border-gray-200' }} rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" name="default_captcha_value" placeholder="{{translate('Enter captcha')}}" autocomplete="off">
                         <a class="refresh-recaptcha cursor-pointer" title="{{translate('Click to refresh')}}">
