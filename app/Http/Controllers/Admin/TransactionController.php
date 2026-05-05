@@ -322,7 +322,7 @@ class TransactionController extends Controller
     {
         $requestMoney = $this->requestMoney->find($request->id);
 
-        if ($requestMoney->to_user_id != $request->user()->id) {
+        if ($request->user()->type != ADMIN_TYPE && $requestMoney->to_user_id != $request->user()->id) {
             Toastr::error(translate('unauthorized request'));
             return back();
         }
