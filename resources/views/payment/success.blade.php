@@ -31,7 +31,7 @@
     <div class="px-6 py-8">
         {{-- Checkmark animado --}}
         <div class="flex justify-center mb-6">
-            <svg class="success-ring w-24 h-24" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="success-ring w-24 h-24" viewBox="0 0 52 52" fill="none">
                 <circle cx="26" cy="26" r="24" fill="#39B54A" fill-opacity=".12"/>
                 <circle cx="26" cy="26" r="24" stroke="#39B54A" stroke-width="2"/>
                 <path class="check-path" d="M15 27l8 8 14-14" stroke="#39B54A" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -48,7 +48,6 @@
                     <svg class="w-4 h-4 animate-spin text-primary" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
                     {{ translate('A redirecionar...') }}
                 </span>
-                <span id="countdown" class="font-bold text-primary text-base">3</span>
             </div>
             <div class="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                 <div id="progress-bar" class="h-full bg-primary rounded-full" style="width:100%"></div>
@@ -61,25 +60,18 @@
 @push('script')
 <script>
     var _redirectUrl = '{{ route("success-callback", ["payment_id" => $paymentId]) }}';
-    var _seconds = 3;
     var _bar = document.getElementById('progress-bar');
-    var _cd  = document.getElementById('countdown');
 
-    // Start transition after paint
+    // Depleta a barra em 1 segundo e redireciona
     requestAnimationFrame(function () {
         requestAnimationFrame(function () {
-            _bar.style.transition = 'width ' + _seconds + 's linear';
+            _bar.style.transition = 'width 1s linear';
             _bar.style.width = '0%';
         });
     });
 
-    var _timer = setInterval(function () {
-        _seconds--;
-        _cd.textContent = _seconds;
-        if (_seconds <= 0) {
-            clearInterval(_timer);
-            window.location.href = _redirectUrl;
-        }
-    }, 1000);
+    setTimeout(function () {
+        window.location.href = _redirectUrl;
+    }, 1100);
 </script>
 @endpush

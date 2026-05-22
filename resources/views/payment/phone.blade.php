@@ -54,7 +54,7 @@
             <input type="hidden" name="payment_id" value="{{ $paymentId }}">
 
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {{ translate('Número de conta 6Cash') }}
+                {{ translate('Número de conta Kempaga') }}
             </label>
 
             <div class="flex gap-2 mb-4">

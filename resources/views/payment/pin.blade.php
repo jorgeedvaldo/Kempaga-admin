@@ -41,7 +41,7 @@
                 <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
             </div>
             <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-1">{{ translate('PIN de Segurança') }}</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{{ translate('Introduza o seu PIN 6Cash para confirmar') }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{{ translate('Introduza o seu PIN Kempaga para confirmar') }}</p>
         </div>
 
         <form action="{{ route('verify-pin') }}" method="POST" id="pin-form">
@@ -115,7 +115,6 @@
         cancelPayment('{{ $frontendCallback }}');
     });
 
-    // Auto-focus first box
     boxes[0] && boxes[0].focus();
 })();
 </script>
