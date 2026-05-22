@@ -210,7 +210,6 @@ class PaymentOrderController extends Controller
             }
 
             $transactionId = payment_transaction($user, $merchantUser, $userEmoney, $merchantEmoney, $amount, $adminUser, $adminEmoney);
-            session()->put('transaction_id', $transactionId);
 
             if ($transactionId != null) {
                 $paymentRecord->user_id = $user->id;
@@ -234,13 +233,31 @@ class PaymentOrderController extends Controller
 
     public function paymentSuccessCallback(Request $request): RedirectResponse
     {
-        $transactionId = session('transaction_id');
         $paymentRecord = $this->paymentRecord->where(['id' => $request->payment_id])->first();
 
-        $callback = $paymentRecord['callback'];
-        $url = $callback . '?transaction_id=' . $transactionId;
+        if (!isset($paymentRecord) || !$paymentRecord->callback) {
+            return redirect('/');
+        }
+
+        $transactionId = $paymentRecord->transaction_id;
+        $url = $paymentRecord->callback . '?transaction_id=' . $transactionId;
+
+        return redirect($url);
+    }
+
+    public function back_to_callback(Request $request): RedirectResponse
+    {
+        $paymentRecord = $this->paymentRecord->where(['id' => $request->payment_id])->first();
+
+        if (!isset($paymentRecord) || !$paymentRecord->callback) {
+            return redirect('/');
+        }
+
+        $url = $paymentRecord->callback;
+        if ($paymentRecord->transaction_id) {
+            $url .= '?transaction_id=' . $paymentRecord->transaction_id;
+        }
 
         return redirect($url);
     }
 }
-
