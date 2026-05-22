@@ -240,7 +240,8 @@ class PaymentOrderController extends Controller
         }
 
         $transactionId = $paymentRecord->transaction_id;
-        $url = $paymentRecord->callback . '?transaction_id=' . $transactionId;
+        $separator = str_contains($paymentRecord->callback, '?') ? '&' : '?';
+        $url = $paymentRecord->callback . $separator . 'transaction_id=' . $transactionId;
 
         return redirect($url);
     }
@@ -253,9 +254,11 @@ class PaymentOrderController extends Controller
             return redirect('/');
         }
 
-        $url = $paymentRecord->callback;
         if ($paymentRecord->transaction_id) {
-            $url .= '?transaction_id=' . $paymentRecord->transaction_id;
+            $separator = str_contains($paymentRecord->callback, '?') ? '&' : '?';
+            $url = $paymentRecord->callback . $separator . 'transaction_id=' . $paymentRecord->transaction_id;
+        } else {
+            $url = $paymentRecord->callback;
         }
 
         return redirect($url);
