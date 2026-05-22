@@ -24,6 +24,7 @@ class PaymentOrderController extends Controller
             'secret_key' => 'required',
             'merchant_number' => 'required',
             'amount' => 'required',
+            'callback' => 'nullable|url',
         ], [
             'public_key.required' => translate('Public key is required'),
             'secret_key.required' => translate('Secret key is required'),
@@ -44,14 +45,18 @@ class PaymentOrderController extends Controller
         $payment = $this->paymentRecord;
         $payment->merchant_user_id = $merchant->user_id;
         $payment->amount = $request->amount;
-        $payment->callback = $merchant->callback;
+        $payment->callback = $request->callback ?? $merchant->callback;
         $payment->is_paid = 0;
         $payment->expired_at = date('Y-m-d H:i:s', strtotime("+5 min"));
         $payment->save();
 
         $redirectUrl = url('') . '/payment-process?payment_id=' . $payment->id;
 
-        return response()->json(['redirect_url' => $redirectUrl, 'status' => 'payment_created'], 200);
+        return response()->json([
+            'redirect_url' => $redirectUrl,
+            'payment_id' => $payment->id,
+            'status' => 'payment_created',
+        ], 200);
     }
 
     public function paymentVerification(Request $request): JsonResponse
@@ -85,4 +90,3 @@ class PaymentOrderController extends Controller
         return response()->json(['errors' => 'Payment record not found'], 403);
     }
 }
-
