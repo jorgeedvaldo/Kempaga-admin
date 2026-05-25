@@ -43,12 +43,15 @@ class SMSModuleController extends Controller
         $additionalData = [];
         if ($request['gateway'] == 'twilio') {
             $additionalData = [
-                'status' => 'required|in:1,0',
-                'sid' => 'required',
-                'messaging_service_sid' => 'required',
-                'token' => 'required',
-                'from' => 'required',
-                'otp_template' => 'required'
+                'status'              => 'required|in:1,0',
+                'sid'                 => 'required',
+                'token'               => 'required',
+                // Verify API (recomendado): preencher verify_service_sid (começa com VA...)
+                'verify_service_sid'  => 'nullable|string',
+                // Messages API (legado): necessário apenas se verify_service_sid estiver vazio
+                'messaging_service_sid' => 'nullable|string',
+                'from'                => 'nullable|string',
+                'otp_template'        => 'nullable|string',
             ];
         } elseif ($request['gateway'] == 'nexmo') {
             $additionalData = [
