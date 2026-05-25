@@ -43,12 +43,12 @@ class SMSModuleController extends Controller
         $additionalData = [];
         if ($request['gateway'] == 'twilio') {
             $additionalData = [
-                'status' => 'required|in:1,0',
-                'sid' => 'required',
+                'status'                => 'required|in:1,0',
+                'sid'                   => 'required',
                 'messaging_service_sid' => 'required',
-                'token' => 'required',
-                'from' => 'required',
-                'otp_template' => 'required'
+                'token'                 => 'required',
+                'from'                  => 'required',
+                'otp_template'          => 'required',
             ];
         } elseif ($request['gateway'] == 'nexmo') {
             $additionalData = [

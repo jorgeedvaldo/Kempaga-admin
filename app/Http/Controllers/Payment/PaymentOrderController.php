@@ -69,34 +69,33 @@ class PaymentOrderController extends Controller
         session()->put('user_phone', $user->phone);
 
         if (isset($otpStatus) && $otpStatus == 1) {
-            $otp = mt_rand(1000, 9999);
-            if (env('APP_MODE') != LIVE) {
-                $otp = '1234';
+            if ($user->is_kyc_verified != 1) {
+                Toastr::warning(translate('User is not verified, please complete your account verification'));
+                return back();
             }
 
-            if (isset($user)) {
-                if ($user->is_kyc_verified != 1) {
-                    Toastr::warning(translate('User is not verified, please complete your account verification'));
-                    return back();
-                }
-
+            if (SmsModule::usingTwilioVerify()) {
+                // ── Twilio Verify API ─────────────────────────────────────────
+                // O Twilio gera e envia o OTP; não é necessário guardar na DB.
+                SmsModule::twilioVerifySend($phone);
+            } else {
+                // ── Legacy: Messages API ──────────────────────────────────────
+                // Gera OTP localmente, guarda na phone_verifications e envia SMS.
+                $otp = (env('APP_MODE') != LIVE) ? '1234' : mt_rand(1000, 9999);
                 DB::table('phone_verifications')->updateOrInsert(['phone' => $phone], [
-                    'otp' => $otp,
+                    'otp'        => $otp,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-
                 if (addon_published_status('Gateways')) {
-                    $response = SmsGateway::send($request['phone'], $otp);
+                    SmsGateway::send($phone, $otp);
                 } else {
-                    $response = SmsModule::send($request['phone'], $otp);
+                    SmsModule::send($phone, $otp);
                 }
-
-                Toastr::success(translate('OTP send !'));
-                return redirect()->route('otp', compact('paymentId'));
             }
-            Toastr::warning(translate('please enter a valid user phone number'));
-            return back();
+
+            Toastr::success(translate('OTP send !'));
+            return redirect()->route('otp', compact('paymentId'));
         }
         return redirect()->route('pin', compact('paymentId'));
     }
@@ -122,8 +121,22 @@ class PaymentOrderController extends Controller
         ]);
 
         $paymentId = $request->payment_id;
-        $verify = $this->phoneVerification->where(['phone' => session('user_phone'), 'otp' => $request['otp']])->first();
+        $phone     = session('user_phone');
 
+        if (SmsModule::usingTwilioVerify()) {
+            // ── Twilio Verify API ─────────────────────────────────────────────
+            // A verificação é feita pelo Twilio; não consulta a DB.
+            if (SmsModule::twilioVerifyCheck($phone, $request['otp'])) {
+                Toastr::success(translate('OTP verify success !'));
+                return redirect()->route('pin', compact('paymentId'));
+            }
+            Toastr::warning(translate('OTP verify failed !'));
+            return back();
+        }
+
+        // ── Legacy: Messages API ──────────────────────────────────────────────
+        // Verifica o OTP na tabela phone_verifications.
+        $verify = $this->phoneVerification->where(['phone' => $phone, 'otp' => $request['otp']])->first();
         if (isset($verify)) {
             $verify->delete();
             Toastr::success(translate('OTP verify success !'));
@@ -139,22 +152,23 @@ class PaymentOrderController extends Controller
         $phone = session('user_phone');
 
         try {
-            $otp = mt_rand(1000, 9999);
-            if (env('APP_MODE') != LIVE) {
-                $otp = '1234';
-            }
-            DB::table('phone_verifications')->updateOrInsert(['phone' => $phone], [
-                'otp' => $otp,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            if (addon_published_status('Gateways')) {
-                $response = SmsGateway::send($phone, $otp);
+            if (SmsModule::usingTwilioVerify()) {
+                // ── Twilio Verify API ─────────────────────────────────────────
+                SmsModule::twilioVerifySend($phone);
             } else {
-                $response = SmsModule::send($phone, $otp);
+                // ── Legacy: Messages API ──────────────────────────────────────
+                $otp = (env('APP_MODE') != LIVE) ? '1234' : mt_rand(1000, 9999);
+                DB::table('phone_verifications')->updateOrInsert(['phone' => $phone], [
+                    'otp'        => $otp,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+                if (addon_published_status('Gateways')) {
+                    SmsGateway::send($phone, $otp);
+                } else {
+                    SmsModule::send($phone, $otp);
+                }
             }
-
             return response()->json(['message' => 'OTP Send'], 200);
         } catch (Exception $e) {
             return response()->json(['message' => 'OTP Send failed'], 404);
