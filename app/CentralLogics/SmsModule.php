@@ -33,23 +33,24 @@ class SmsModule
 
     // -------------------------------------------------------------------------
     // Twilio Verify API (v2) — OTP gerido pelo Twilio, sem guardar na DB
+    // Usa o campo 'messaging_service_sid' existente na DB (valor VA...).
     // -------------------------------------------------------------------------
 
     /**
-     * Returns true when Twilio Verify is configured (verify_service_sid present).
-     * If false the legacy Messages API flow is used instead.
+     * Returns true when messaging_service_sid starts with "VA" (Verify Service).
+     * If false, falls back to the legacy Messages API flow.
      */
     public static function usingTwilioVerify(): bool
     {
         $config = self::get_settings('twilio');
         return isset($config)
             && (int)($config['status'] ?? 0) === 1
-            && !empty($config['verify_service_sid']);
+            && str_starts_with($config['messaging_service_sid'] ?? '', 'VA');
     }
 
     /**
      * Send OTP via Twilio Verify API.
-     * POST https://verify.twilio.com/v2/Services/{ServiceSid}/Verifications
+     * POST https://verify.twilio.com/v2/Services/{messaging_service_sid}/Verifications
      */
     public static function twilioVerifySend(string $receiver): string
     {
@@ -60,7 +61,7 @@ class SmsModule
 
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL            => "https://verify.twilio.com/v2/Services/{$config['verify_service_sid']}/Verifications",
+            CURLOPT_URL            => "https://verify.twilio.com/v2/Services/{$config['messaging_service_sid']}/Verifications",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => http_build_query(['To' => $receiver, 'Channel' => 'sms']),
@@ -79,7 +80,7 @@ class SmsModule
 
     /**
      * Check OTP via Twilio Verify API.
-     * POST https://verify.twilio.com/v2/Services/{ServiceSid}/VerificationChecks
+     * POST https://verify.twilio.com/v2/Services/{messaging_service_sid}/VerificationChecks
      * Returns true when Twilio responds with status "approved".
      */
     public static function twilioVerifyCheck(string $receiver, string $code): bool
@@ -91,7 +92,7 @@ class SmsModule
 
         $ch = curl_init();
         curl_setopt_array($ch, [
-            CURLOPT_URL            => "https://verify.twilio.com/v2/Services/{$config['verify_service_sid']}/VerificationChecks",
+            CURLOPT_URL            => "https://verify.twilio.com/v2/Services/{$config['messaging_service_sid']}/VerificationChecks",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => http_build_query(['To' => $receiver, 'Code' => $code]),
