@@ -76,8 +76,9 @@ class PaymentOrderController extends Controller
 
             if (SmsModule::usingTwilioVerify()) {
                 // ── Twilio Verify API ─────────────────────────────────────────
-                // O Twilio gera e envia o OTP; não é necessário guardar na DB.
-                SmsModule::twilioVerifySend($phone);
+                // Usa $user->phone (formato da DB) para garantir que send e check
+                // usam exactamente o mesmo número — evita falha por formato diferente.
+                SmsModule::twilioVerifySend($user->phone);
             } else {
                 // ── Legacy: Messages API ──────────────────────────────────────
                 // Gera OTP localmente, guarda na phone_verifications e envia SMS.
